@@ -1,4 +1,4 @@
-﻿import { HeartPulse, Volume2, VolumeX, Wind, X } from 'lucide-react'
+import { HeartPulse, ShieldCheck, Volume2, VolumeX, Wind, X } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 const TOTAL_SECONDS = 90
@@ -7,23 +7,23 @@ function getPhase(second) {
   const cycle = second % 10
 
   if (cycle < 4) return 'Inhala'
-  if (cycle < 7) return 'Sosten'
+  if (cycle < 7) return 'Sostén'
   return 'Exhala'
 }
 
 function getScale(phase) {
   if (phase === 'Inhala') return 1.12
-  if (phase === 'Sosten') return 1.08
+  if (phase === 'Sostén') return 1.08
   return 0.92
 }
 
 function getPhaseCopy(phase) {
   if (phase === 'Inhala') return 'Toma aire lento por la nariz.'
-  if (phase === 'Sosten') return 'Manten el aire y baja el impulso.'
+  if (phase === 'Sostén') return 'Mantén el aire y baja el impulso.'
   return 'Suelta el aire y deja pasar la urgencia.'
 }
 
-export default function Crisis({ isOpen, onClose }) {
+export default function Crisis({ isOpen, onClose, profile }) {
   const [secondsLeft, setSecondsLeft] = useState(TOTAL_SECONDS)
   const [soundOn, setSoundOn] = useState(false)
   const audioContextRef = useRef(null)
@@ -72,7 +72,7 @@ export default function Crisis({ isOpen, onClose }) {
     const gain = context.createGain()
 
     oscillator.type = 'sine'
-    oscillator.frequency.value = phase === 'Inhala' ? 432 : phase === 'Sosten' ? 396 : 320
+    oscillator.frequency.value = phase === 'Inhala' ? 432 : phase === 'Sostén' ? 396 : 320
     gain.gain.value = 0.0001
 
     oscillator.connect(gain)
@@ -98,15 +98,7 @@ export default function Crisis({ isOpen, onClose }) {
   if (!isOpen) return null
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background:
-          'radial-gradient(circle at top, rgba(239,68,68,0.16), transparent 35%), linear-gradient(180deg, #020617 0%, #111827 100%)',
-        color: '#fff',
-        padding: '24px 20px 40px',
-      }}
-    >
+    <div style={{ minHeight: '100vh', background: 'radial-gradient(circle at top, rgba(239,68,68,0.16), transparent 35%), linear-gradient(180deg, #020617 0%, #111827 100%)', color: '#fff', padding: '24px 20px 40px' }}>
       <style>{`
         @keyframes stopBreathRing {
           0% { transform: translate(-50%, -50%) scale(0.82); opacity: 0.42; }
@@ -121,95 +113,24 @@ export default function Crisis({ isOpen, onClose }) {
             <h2 style={{ margin: '8px 0 0', fontSize: 28 }}>No apuestes ahora</h2>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <button
-              type="button"
-              onClick={() => setSoundOn((current) => !current)}
-              style={{
-                width: 48,
-                height: 48,
-                borderRadius: '50%',
-                border: '1px solid rgba(255,255,255,0.14)',
-                background: 'rgba(255,255,255,0.06)',
-                color: '#fff',
-                display: 'grid',
-                placeItems: 'center',
-              }}
-            >
+            <button type="button" onClick={() => setSoundOn((current) => !current)} style={{ width: 48, height: 48, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.14)', background: 'rgba(255,255,255,0.06)', color: '#fff', display: 'grid', placeItems: 'center' }}>
               {soundOn ? <Volume2 size={20} /> : <VolumeX size={20} />}
             </button>
-            <button
-              type="button"
-              onClick={onClose}
-              style={{
-                width: 48,
-                height: 48,
-                borderRadius: '50%',
-                border: '1px solid rgba(255,255,255,0.14)',
-                background: 'rgba(255,255,255,0.06)',
-                color: '#fff',
-                display: 'grid',
-                placeItems: 'center',
-              }}
-            >
+            <button type="button" onClick={onClose} style={{ width: 48, height: 48, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.14)', background: 'rgba(255,255,255,0.06)', color: '#fff', display: 'grid', placeItems: 'center' }}>
               <X size={20} />
             </button>
           </div>
         </div>
 
-        <div
-          style={{
-            background: 'rgba(15,23,42,0.68)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 30,
-            padding: 24,
-            boxShadow: '0 24px 60px rgba(0,0,0,0.25)',
-          }}
-        >
+        <div style={{ background: 'rgba(15,23,42,0.68)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 30, padding: 24, boxShadow: '0 24px 60px rgba(0,0,0,0.25)' }}>
           <div style={{ height: 10, background: 'rgba(255,255,255,0.08)', borderRadius: 999, overflow: 'hidden' }}>
-            <div
-              style={{
-                width: progress,
-                height: '100%',
-                background: 'linear-gradient(90deg, #ef4444 0%, #f97316 100%)',
-              }}
-            />
+            <div style={{ width: progress, height: '100%', background: 'linear-gradient(90deg, #ef4444 0%, #f97316 100%)' }} />
           </div>
 
           <div style={{ textAlign: 'center', padding: '30px 0 26px' }}>
-            <div
-              style={{
-                position: 'relative',
-                width: 260,
-                height: 260,
-                margin: '0 auto 18px',
-                display: 'grid',
-                placeItems: 'center',
-              }}
-            >
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  width: 220,
-                  height: 220,
-                  borderRadius: '50%',
-                  border: '1px solid rgba(255,255,255,0.20)',
-                  animation: 'stopBreathRing 4s ease-out infinite',
-                }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  width: 220,
-                  height: 220,
-                  borderRadius: '50%',
-                  border: '1px solid rgba(255,255,255,0.16)',
-                  animation: 'stopBreathRing 4s ease-out 1.2s infinite',
-                }}
-              />
+            <div style={{ position: 'relative', width: 260, height: 260, margin: '0 auto 18px', display: 'grid', placeItems: 'center' }}>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', width: 220, height: 220, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.20)', animation: 'stopBreathRing 4s ease-out infinite' }} />
+              <div style={{ position: 'absolute', top: '50%', left: '50%', width: 220, height: 220, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.16)', animation: 'stopBreathRing 4s ease-out 1.2s infinite' }} />
               <div
                 style={{
                   width: 220,
@@ -221,13 +142,10 @@ export default function Crisis({ isOpen, onClose }) {
                   transition: 'transform 900ms ease-in-out, box-shadow 900ms ease-in-out, background 900ms ease-in-out',
                   background: phase === 'Inhala'
                     ? 'radial-gradient(circle, rgba(248,113,113,0.96) 0%, rgba(220,38,38,0.80) 55%, rgba(153,27,27,0.32) 100%)'
-                    : phase === 'Sosten'
+                    : phase === 'Sostén'
                       ? 'radial-gradient(circle, rgba(251,191,36,0.96) 0%, rgba(217,119,6,0.80) 55%, rgba(120,53,15,0.32) 100%)'
                       : 'radial-gradient(circle, rgba(96,165,250,0.96) 0%, rgba(37,99,235,0.80) 55%, rgba(30,64,175,0.32) 100%)',
-                  boxShadow:
-                    phase === 'Exhala'
-                      ? '0 0 80px rgba(96,165,250,0.28)'
-                      : '0 0 80px rgba(248,113,113,0.24)',
+                  boxShadow: phase === 'Exhala' ? '0 0 80px rgba(96,165,250,0.28)' : '0 0 80px rgba(248,113,113,0.24)',
                 }}
               >
                 <div>
@@ -241,57 +159,34 @@ export default function Crisis({ isOpen, onClose }) {
             <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>{getPhaseCopy(phase)}</div>
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  background: 'rgba(255,255,255,0.08)',
-                  borderRadius: 999,
-                  padding: '8px 14px',
-                  color: '#e2e8f0',
-                  fontWeight: 700,
-                }}
-              >
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.08)', borderRadius: 999, padding: '8px 14px', color: '#e2e8f0', fontWeight: 700 }}>
                 <Wind size={16} />
                 Respiracion guiada
               </span>
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  background: 'rgba(255,255,255,0.08)',
-                  borderRadius: 999,
-                  padding: '8px 14px',
-                  color: '#e2e8f0',
-                  fontWeight: 700,
-                }}
-              >
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.08)', borderRadius: 999, padding: '8px 14px', color: '#e2e8f0', fontWeight: 700 }}>
                 <HeartPulse size={16} />
                 {soundOn ? 'Audio suave activo' : 'Audio opcional'}
               </span>
             </div>
 
             <p style={{ margin: 0, color: '#cbd5e1', lineHeight: 1.6 }}>
-              La urgencia baja si no actuas de inmediato. Respira, aleja el celular de la casa de apuestas y vuelve cuando termine el contador.
+              La urgencia baja si no actúas de inmediato. Respira, aleja el celular de la casa de apuestas y vuelve cuando termine el contador.
             </p>
           </div>
 
-          <div
-            style={{
-              background: 'rgba(255,255,255,0.04)',
-              borderRadius: 22,
-              padding: 18,
-              color: '#e2e8f0',
-              lineHeight: 1.6,
-            }}
-          >
+          <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 22, padding: 18, color: '#e2e8f0', lineHeight: 1.6, marginBottom: 12 }}>
             1. Inhala por 4 segundos.
             <br />
             2. Sosten por 3 segundos.
             <br />
             3. Exhala por 3 segundos.
+          </div>
+
+          <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', background: 'rgba(16,185,129,0.10)', border: '1px solid rgba(52,211,153,0.18)', borderRadius: 20, padding: '14px 16px' }}>
+            <ShieldCheck size={18} color="#86efac" style={{ marginTop: 2, flexShrink: 0 }} />
+            <div style={{ color: '#d1fae5', fontSize: 13, lineHeight: 1.55 }}>
+              {profile?.reason || 'Este minuto protege tu futuro.'} Cada vez que frenas el impulso, reduces el daño que esta conducta puede causar si sigue creciendo con el tiempo.
+            </div>
           </div>
         </div>
       </div>

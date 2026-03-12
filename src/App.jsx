@@ -1,34 +1,105 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
+import Assistant from './Assistant.jsx'
+import CheckIn from './CheckIn.jsx'
+import Diagnostic from './Diagnostic.jsx'
+import Education from './Education.jsx'
+import Home from './Home.jsx'
+import Onboarding from './Onboarding.jsx'
+import Premium from './Premium.jsx'
+import { applyDailyCheckIn, defaultProfile, loadProfile, saveProfile } from './storage.js'
+import { loadThemeMode, saveThemeMode, getTheme } from './theme.js'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [profile, setProfile] = useState(defaultProfile)
+  const [step, setStep] = useState('loading')
+  const [screen, setScreen] = useState('home')
+  const [themeMode, setThemeMode] = useState('light')
+
+  useEffect(() => {
+    const storedProfile = loadProfile()
+    const storedTheme = loadThemeMode()
+    setThemeMode(storedTheme)
+
+    if (storedProfile) {
+      setProfile(storedProfile)
+      setStep('home')
+      return
+    }
+
+    setStep('onboarding')
+  }, [])
+
+  useEffect(() => {
+    const theme = getTheme(themeMode)
+    document.body.style.background = theme.mode === 'dark' ? '#020617' : '#eef4ff'
+    document.body.style.color = theme.text
+  }, [themeMode])
+
+  const toggleTheme = () => {
+    const nextMode = themeMode === 'light' ? 'dark' : 'light'
+    setThemeMode(nextMode)
+    saveThemeMode(nextMode)
+  }
+
+  const handleOnboardingComplete = (partialProfile) => {
+    const nextProfile = { ...profile, ...partialProfile }
+    setProfile(nextProfile)
+    saveProfile(nextProfile)
+    setStep('diagnostic')
+  }
+
+  const handleDiagnosticComplete = (partialProfile) => {
+    const nextProfile = { ...profile, ...partialProfile }
+    setProfile(nextProfile)
+    saveProfile(nextProfile)
+    setStep('home')
+    setScreen('home')
+  }
+
+  const handleDailyCheckIn = (intensity, note) => {
+    const nextProfile = applyDailyCheckIn(profile, intensity, note)
+    setProfile(nextProfile)
+    saveProfile(nextProfile)
+    setScreen('home')
+  }
+
+  if (step === 'loading') return null
+
+  if (step === 'onboarding') {
+    return <Onboarding initialProfile={profile} onContinue={handleOnboardingComplete} themeMode={themeMode} onToggleTheme={toggleTheme} />
+  }
+
+  if (step === 'diagnostic') {
+    return <Diagnostic initialProfile={profile} onContinue={handleDiagnosticComplete} themeMode={themeMode} onToggleTheme={toggleTheme} />
+  }
+
+  if (screen === 'education') {
+    return <Education profile={profile} onBack={() => setScreen('home')} onOpenPremium={() => setScreen('premium')} themeMode={themeMode} onToggleTheme={toggleTheme} />
+  }
+
+  if (screen === 'premium') {
+    return <Premium profile={profile} onBack={() => setScreen('home')} onOpenEducation={() => setScreen('education')} themeMode={themeMode} onToggleTheme={toggleTheme} />
+  }
+
+  if (screen === 'assistant') {
+    return <Assistant profile={profile} onBack={() => setScreen('home')} onOpenCheckIn={() => setScreen('checkin')} themeMode={themeMode} onToggleTheme={toggleTheme} />
+  }
+
+  if (screen === 'checkin') {
+    return <CheckIn profile={profile} onBack={() => setScreen('home')} onSubmit={handleDailyCheckIn} themeMode={themeMode} onToggleTheme={toggleTheme} />
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Home
+      profile={profile}
+      themeMode={themeMode}
+      onToggleTheme={toggleTheme}
+      onRestartOnboarding={() => setStep('onboarding')}
+      onOpenEducation={() => setScreen('education')}
+      onOpenPremium={() => setScreen('premium')}
+      onOpenAssistant={() => setScreen('assistant')}
+      onOpenCheckIn={() => setScreen('checkin')}
+    />
   )
 }
 
