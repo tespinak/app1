@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { ArrowLeft, Bot, CalendarClock, Gem, LockKeyhole, ShieldCheck, Sparkles, Star, TrendingUp } from 'lucide-react'
 import BottomNav from './BottomNav.jsx'
 import ThemeToggle from './ThemeToggle.jsx'
@@ -7,47 +7,59 @@ import { getTheme } from './theme.js'
 const premiumFeatures = [
   {
     icon: Bot,
-    title: 'Un asistente que sÃƒÆ’Ã‚Â­ te conoce',
-    text: 'Recuerda tu motivo, entiende mejor tus recaÃƒÆ’Ã‚Â­das y te responde con mÃƒÆ’Ã‚Â¡s calma cuando mÃƒÆ’Ã‚Â¡s lo necesitas.',
+    title: 'Un asistente que sí te conoce',
+    text: 'Recuerda tu motivo, entiende mejor tus recaídas y te responde con más calma cuando más lo necesitas.',
     tone: '#2563eb',
   },
   {
     icon: CalendarClock,
-    title: 'Alertas antes de los momentos difÃƒÆ’Ã‚Â­ciles',
+    title: 'Alertas antes de los momentos difíciles',
     text: 'Te avisa antes de partidos, torneos o franjas horarias que suelen encender el impulso.',
     tone: '#0f766e',
   },
   {
     icon: LockKeyhole,
     title: 'Bloqueo y modo protegido',
-    text: 'El bloqueo de apps, sitios de apuestas y jornadas sensibles queda reservado para PRO.',
+    text: 'El bloqueo de apps, sitios de apuestas y jornadas sensibles queda reservado para STOP PRO.',
     tone: '#1d4ed8',
   },
   {
     icon: ShieldCheck,
-    title: 'Tu proceso mucho mÃƒÆ’Ã‚Â¡s claro',
-    text: 'Las estadÃƒÆ’Ã‚Â­sticas de tiempo perdido por pÃƒÆ’Ã‚Â¡ginas, uso y seÃƒÆ’Ã‚Â±ales de recaÃƒÆ’Ã‚Â­da son exclusivas de PRO.',
+    title: 'Tu proceso mucho más claro',
+    text: 'Las estadísticas de tiempo perdido por páginas, uso y señales de recaída son exclusivas de STOP PRO.',
     tone: '#0f766e',
   },
 ]
 
 const previewStats = [
-  { value: '71%', label: 'logra sostener su primera semana', note: 'Vista previa del tipo de mÃƒÆ’Ã‚Â©trica que podrÃƒÆ’Ã‚Â­as seguir con una versiÃƒÆ’Ã‚Â³n mÃƒÆ’Ã‚Â¡s completa.' },
-  { value: '2,4x', label: 'mÃƒÆ’Ã‚Â¡s check-ins completados', note: 'Cuando el plan se siente mÃƒÆ’Ã‚Â¡s personal, es mÃƒÆ’Ã‚Â¡s fÃƒÆ’Ã‚Â¡cil volver y sostenerlo.' },
-  { value: '3 capas', label: 'de protecciÃƒÆ’Ã‚Â³n inteligente', note: 'Antes del gatillo, durante el impulso y cuando el dÃƒÆ’Ã‚Â­a termina.' },
+  {
+    value: '71%',
+    label: 'logra sostener su primera semana',
+    note: 'Vista previa del tipo de métrica que podrías seguir con una versión más completa.',
+  },
+  {
+    value: '2,4x',
+    label: 'más check-ins completados',
+    note: 'Cuando el plan se siente más personal, es más fácil volver y sostenerlo.',
+  },
+  {
+    value: '3 capas',
+    label: 'de protección inteligente',
+    note: 'Antes del gatillo, durante el impulso y cuando el día termina.',
+  },
 ]
 
 const premiumMoments = [
   'Antes del partido: te avisa que viene una franja sensible.',
   'Durante el impulso: te da una salida concreta en vez de dejarte improvisando.',
-  'DespuÃƒÆ’Ã‚Â©s: transforma lo que pasÃƒÆ’Ã‚Â³ en informaciÃƒÆ’Ã‚Â³n ÃƒÆ’Ã‚Âºtil, no en culpa.',
+  'Después: transforma lo que pasó en información útil, no en culpa.',
 ]
 
 const comparisonRows = [
-  { label: 'BotÃƒÆ’Ã‚Â³n de crisis', current: 'BÃƒÆ’Ã‚Â¡sico', pro: 'MÃƒÆ’Ã‚Â¡s contexto y apoyo' },
-  { label: 'Asistente', current: 'BÃƒÆ’Ã‚Â¡sico', pro: 'Personalizado y con memoria' },
+  { label: 'Botón de crisis', current: 'Básico', pro: 'Más contexto y apoyo' },
+  { label: 'Asistente', current: 'Básico', pro: 'Personalizado y con memoria' },
   { label: 'Bloqueo de apps y sitios', current: 'No incluido', pro: 'Incluido' },
-  { label: 'Tiempo perdido por pÃƒÆ’Ã‚Â¡ginas', current: 'No incluido', pro: 'Incluido' },
+  { label: 'Tiempo perdido por páginas', current: 'No incluido', pro: 'Incluido' },
   { label: 'Alertas de riesgo', current: 'Generales', pro: 'Antes de jornadas sensibles' },
 ]
 
@@ -111,8 +123,11 @@ export default function Premium({ profile, currentScreen = 'premium', onNavigate
               <Gem size={16} color="#93c5fd" />
               STOP PRO
             </div>
-            <h1 style={{ margin: 0, fontSize: 36, lineHeight: 1.02 }}>MÃƒÆ’Ã‚Â¡s apoyo cuando mÃƒÆ’Ã‚Â¡s lo necesitas</h1>
-            <p style={{ margin: '12px 0 18px', color: '#dbeafe', lineHeight: 1.6 }}>STOP PRO estÃƒÆ’Ã‚Â¡ pensado para cuando ya no quieres depender solo de fuerza de voluntad. Te ayuda a anticiparte, sostenerte y entender mejor lo que te pasa.</p>
+            <h1 style={{ margin: 0, fontSize: 36, lineHeight: 1.02 }}>Más apoyo cuando más lo necesitas</h1>
+            <p style={{ margin: '12px 0 18px', color: '#dbeafe', lineHeight: 1.6 }}>
+              STOP PRO está pensado para cuando ya no quieres depender solo de fuerza de voluntad. Te ayuda a anticiparte,
+              sostenerte y entender mejor lo que te pasa.
+            </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
               <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 24, padding: 16, backdropFilter: 'blur(14px)' }}>
                 <div style={{ fontSize: 13, color: '#bfdbfe', marginBottom: 6 }}>Mensual</div>
@@ -127,14 +142,14 @@ export default function Premium({ profile, currentScreen = 'premium', onNavigate
             </div>
             <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 18, padding: '14px 16px', color: '#fff', lineHeight: 1.55 }}>
               <div style={{ fontWeight: 900, marginBottom: 4 }}>Con el plan anual ahorras $${yearlySavings.toLocaleString('es-CL')}</div>
-              <div style={{ color: '#dbeafe', fontSize: 13 }}>Pagando el aÃƒÆ’Ã‚Â±o completo te sale mÃƒÆ’Ã‚Â¡s barato que ir mes a mes.</div>
+              <div style={{ color: '#dbeafe', fontSize: 13 }}>Pagando el año completo te sale más barato que ir mes a mes.</div>
             </div>
           </div>
         </section>
 
         <section style={{ ...baseCard, marginBottom: 18, padding: 10, background: theme.segmentedSurface }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-            <TabButton active={activeTab === 'overview'} label="QuÃƒÆ’Ã‚Â© incluye" onClick={() => setActiveTab('overview')} theme={theme} />
+            <TabButton active={activeTab === 'overview'} label="Qué incluye" onClick={() => setActiveTab('overview')} theme={theme} />
             <TabButton active={activeTab === 'pricing'} label="Precios y ahorro" onClick={() => setActiveTab('pricing')} theme={theme} />
           </div>
         </section>
@@ -144,14 +159,15 @@ export default function Premium({ profile, currentScreen = 'premium', onNavigate
             <section style={{ ...baseCard, marginBottom: 18 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                 <Star size={18} color={proAccent} />
-                <div style={{ color: theme.text, fontWeight: 800 }}>ComparaciÃƒÆ’Ã‚Â³n simple</div>
+                <div style={{ color: theme.text, fontWeight: 800 }}>Comparación simple</div>
               </div>
               <div style={{ color: theme.muted, lineHeight: 1.65, marginBottom: 14 }}>
-                La idea es simple: tu versiÃƒÆ’Ã‚Â³n actual te acompaÃƒÆ’Ã‚Â±a en lo esencial. STOP PRO suma la parte mÃƒÆ’Ã‚Â¡s profunda, preventiva y personalizada.
+                La idea es simple: tu versión actual te acompaña en lo esencial. STOP PRO suma la parte más profunda,
+                preventiva y personalizada.
               </div>
               <div style={{ display: 'grid', gap: 10 }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.95fr 1fr', gap: 10, alignItems: 'center', padding: '0 4px 2px' }}>
-                  <div style={{ color: theme.subtle, fontSize: 12, fontWeight: 900, letterSpacing: 0.4 }}>FUNCIÃƒÆ’Ã¢â‚¬Å“N</div>
+                  <div style={{ color: theme.subtle, fontSize: 12, fontWeight: 900, letterSpacing: 0.4 }}>FUNCIÓN</div>
                   <div style={{ color: theme.subtle, fontSize: 12, fontWeight: 900, letterSpacing: 0.4 }}>ACTUAL</div>
                   <div style={{ color: proAccent, fontSize: 12, fontWeight: 900, letterSpacing: 0.4 }}>STOP PRO</div>
                 </div>
@@ -180,12 +196,16 @@ export default function Premium({ profile, currentScreen = 'premium', onNavigate
             <section style={{ ...baseCard, marginBottom: 18 }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: theme.text, fontWeight: 800, marginBottom: 10 }}>
                 <Star size={16} color={supportAccent} />
-                AsÃƒÆ’Ã‚Â­ se verÃƒÆ’Ã‚Â­a en tu caso
+                Así se vería en tu caso
               </div>
-              <div style={{ color: theme.muted, lineHeight: 1.6, marginBottom: 14 }}>Si hoy tus recaÃƒÆ’Ã‚Â­das se activan con {profile.sportFocus || 'deportes o juego online'}, STOP PRO puede ayudarte a llegar antes al problema, no solo reaccionar cuando ya estÃƒÆ’Ã‚Â¡s adentro.</div>
+              <div style={{ color: theme.muted, lineHeight: 1.6, marginBottom: 14 }}>
+                Si hoy tus recaídas se activan con {profile.sportFocus || 'deportes o juego online'}, STOP PRO puede ayudarte a llegar antes al problema, no solo reaccionar cuando ya estás adentro.
+              </div>
               <div style={{ display: 'grid', gap: 10 }}>
                 {premiumMoments.map((item) => (
-                  <div key={item} style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.5, transition: theme.transition }}>{item}</div>
+                  <div key={item} style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.5, transition: theme.transition }}>
+                    {item}
+                  </div>
                 ))}
               </div>
             </section>
@@ -195,7 +215,7 @@ export default function Premium({ profile, currentScreen = 'premium', onNavigate
             <section style={{ ...baseCard, marginBottom: 18 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                 <TrendingUp size={18} color={proAccent} />
-                <div style={{ color: theme.text, fontWeight: 800 }}>Lo que podrÃƒÆ’Ã‚Â­as empezar a ver con mÃƒÆ’Ã‚Â¡s apoyo</div>
+                <div style={{ color: theme.text, fontWeight: 800 }}>Lo que podrías empezar a ver con más apoyo</div>
               </div>
               <div style={{ display: 'grid', gap: 10 }}>
                 {previewStats.map((item) => (
@@ -215,13 +235,14 @@ export default function Premium({ profile, currentScreen = 'premium', onNavigate
                 <Sparkles size={18} />
                 Lo exclusivo de STOP PRO
               </div>
-              El bloqueo de apps y sitios, las estadÃƒÆ’Ã‚Â­sticas de tiempo perdido por pÃƒÆ’Ã‚Â¡ginas y una lectura mucho mÃƒÆ’Ã‚Â¡s profunda de tus horarios de riesgo estÃƒÆ’Ã‚Â¡n pensados como parte exclusiva de PRO.
+              El bloqueo de apps y sitios, las estadísticas de tiempo perdido por páginas y una lectura mucho más profunda
+              de tus horarios de riesgo están pensados como parte exclusiva de STOP PRO.
             </section>
 
             <section style={{ ...baseCard, marginBottom: 18 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                 <CalendarClock size={18} color={supportAccent} />
-                <div style={{ color: theme.text, fontWeight: 800 }}>Elegir el aÃƒÆ’Ã‚Â±o hace mÃƒÆ’Ã‚Â¡s sentido si ya te decidiste</div>
+                <div style={{ color: theme.text, fontWeight: 800 }}>Elegir el año hace más sentido si ya te decidiste</div>
               </div>
               <div style={{ color: theme.muted, lineHeight: 1.65, marginBottom: 14 }}>
                 Si sabes que quieres sostener esto, el plan anual te baja el costo mensual y te ahorra dinero real frente al pago mes a mes.
@@ -229,7 +250,9 @@ export default function Premium({ profile, currentScreen = 'premium', onNavigate
               <div style={{ display: 'grid', gap: 10 }}>
                 <div style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 800 }}>Pagando mensual durante 12 meses: $11.880</div>
                 <div style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 800 }}>Pagando anual: $9.990</div>
-                <div style={{ background: theme.mode === 'dark' ? 'rgba(15,118,110,0.18)' : '#dcfce7', borderRadius: 18, padding: '14px 16px', border, color: supportAccent, fontWeight: 900 }}>Ahorro total: $${yearlySavings.toLocaleString('es-CL')}</div>
+                <div style={{ background: theme.mode === 'dark' ? 'rgba(15,118,110,0.18)' : '#dcfce7', borderRadius: 18, padding: '14px 16px', border, color: supportAccent, fontWeight: 900 }}>
+                  Ahorro total: $${yearlySavings.toLocaleString('es-CL')}
+                </div>
               </div>
             </section>
           </>
