@@ -9,22 +9,22 @@ const spendRanges = [
   { label: 'Menos de $10.000 por semana', value: 7000 },
   { label: '$10.000 a $25.000 por semana', value: 18000 },
   { label: '$25.000 a $50.000 por semana', value: 38000 },
-  { label: 'Más de $50.000 por semana', value: 65000 },
+  { label: 'MÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s de $50.000 por semana', value: 65000 },
 ]
 const timeRanges = [
-  { label: 'Menos de 1 hora al día', value: 0.5 },
-  { label: '1 a 2 horas al día', value: 1.5 },
-  { label: '2 a 4 horas al día', value: 3 },
-  { label: 'Más de 4 horas al día', value: 5 },
+  { label: 'Menos de 1 hora al dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­a', value: 0.5 },
+  { label: '1 a 2 horas al dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­a', value: 1.5 },
+  { label: '2 a 4 horas al dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­a', value: 3 },
+  { label: 'MÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s de 4 horas al dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­a', value: 5 },
 ]
 const bettingTypes = ['Apuestas deportivas', 'Tragamonedas o casino', 'Ambas']
-const incitementOptions = ['Adrenalina', 'Recuperar pérdidas', 'Aburrimiento', 'Ansiedad', 'Soledad', 'Sentirme mejor rápido']
-const goalOptions = ['Paz mental', 'Más dinero disponible', 'Volver a enfocarme', 'Dormir mejor', 'Recuperar confianza', 'Mejor relación con mi entorno']
-const focusOptions = ['Fútbol', 'NBA', 'Tenis', 'Casino online', 'Tragamonedas', 'Otro']
+const incitementOptions = ['Adrenalina', 'Recuperar pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©rdidas', 'Aburrimiento', 'Ansiedad', 'Soledad', 'Sentirme mejor rÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡pido']
+const goalOptions = ['Paz mental', 'MÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s dinero disponible', 'Volver a enfocarme', 'Dormir mejor', 'Recuperar confianza', 'Mejor relaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n con mi entorno']
+const focusOptions = ['FÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºtbol', 'NBA', 'Tenis', 'Casino online', 'Tragamonedas', 'Otro']
 const insightCards = [
-  'La OMS estima que cerca del 1,2% de la población adulta mundial vive un trastorno del juego.',
-  'Las personas que juegan a niveles más dañinos generan alrededor del 60% de las pérdidas que sostienen la industria.',
-  'Por cada persona que juega a niveles de alto riesgo, un promedio de otras seis termina afectada también.',
+  'La OMS estima que cerca del 1,2% de la poblaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n adulta mundial vive un trastorno del juego.',
+  'Las personas que juegan a niveles mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s daÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â±inos generan alrededor del 60% de las pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©rdidas que sostienen la industria.',
+  'Por cada persona que juega a niveles de alto riesgo, un promedio de otras seis termina afectada tambiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©n.',
 ]
 
 function getAgeIndex(value) {
@@ -142,7 +142,6 @@ function SlideShell({ theme, icon: Icon, title, subtitle, stepLabel, children })
         padding: 20,
         border: `1px solid ${theme.border}`,
         boxShadow: theme.shadow,
-        backdropFilter: 'blur(18px)',
         transition: theme.transition,
         animation: 'stopFadeUp 340ms ease',
       }}
@@ -242,21 +241,35 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
   }
 
   const toggleIncitement = (label) => {
-    setForm((current) => ({
-      ...current,
-      incitement: current.incitement.includes(label)
-        ? current.incitement.filter((item) => item !== label)
-        : [...current.incitement, label].slice(-3),
-    }))
+    const nextValues = form.incitement.includes(label)
+      ? form.incitement.filter((item) => item !== label)
+      : [...form.incitement, label].slice(-3)
+
+    update('incitement', nextValues)
+
+    if (!form.incitement.includes(label) && nextValues.length === 3) {
+      setIsAdvancing(true)
+      window.setTimeout(() => {
+        setSlideIndex((current) => Math.min(current + 1, slides.length - 1))
+        setIsAdvancing(false)
+      }, 150)
+    }
   }
 
   const toggleFocus = (label) => {
-    setForm((current) => ({
-      ...current,
-      sportFocus: current.sportFocus.includes(label)
-        ? current.sportFocus.filter((item) => item !== label)
-        : [...current.sportFocus, label].slice(-3),
-    }))
+    const nextValues = form.sportFocus.includes(label)
+      ? form.sportFocus.filter((item) => item !== label)
+      : [...form.sportFocus, label].slice(-3)
+
+    update('sportFocus', nextValues)
+
+    if (!form.sportFocus.includes(label) && nextValues.length === 3) {
+      setIsAdvancing(true)
+      window.setTimeout(() => {
+        setSlideIndex((current) => Math.min(current + 1, slides.length - 1))
+        setIsAdvancing(false)
+      }, 150)
+    }
   }
 
   const handleAgeChange = (event) => {
@@ -274,7 +287,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
   const renderSlide = () => {
     if (currentSlide === 'nombre') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 1" icon={UserRound} title="¿Cómo quieres que te llamemos?" subtitle="Esto hace que STOP se sienta más personal desde el primer minuto.">
+        <SlideShell theme={theme} stepLabel="PREGUNTA 1" icon={UserRound} title="ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿CÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³mo quieres que te llamemos?" subtitle="Esto hace que STOP se sienta mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s personal desde el primer minuto.">
           <input value={form.name} onChange={(event) => update('name', event.target.value)} placeholder="Ej: Nico" required style={{ width: '100%', border: `1px solid ${theme.border}`, borderRadius: 20, padding: '16px 18px', background: theme.input, color: theme.text, fontSize: 16, transition: theme.transition }} />
         </SlideShell>
       )
@@ -282,7 +295,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     if (currentSlide === 'edad') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 2" icon={Target} title="¿En qué rango de edad estás?" subtitle="Nos ayuda a calibrar el tono de la app y el tipo de mensajes que pueden servirte más.">
+        <SlideShell theme={theme} stepLabel="PREGUNTA 2" icon={Target} title="ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿En quÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© rango de edad estÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s?" subtitle="Nos ayuda a calibrar el tono de la app y el tipo de mensajes que pueden servirte mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s.">
           <div style={{ background: theme.mode === 'dark' ? '#0f172a' : '#eef2ff', borderRadius: 24, padding: 18, transition: theme.transition }}>
             <div style={{ fontSize: 30, fontWeight: 900, color: theme.text, marginBottom: 12 }}>{ageMarks[ageIndex]}</div>
             <input type="range" min="0" max="3" step="1" value={ageIndex} onChange={handleAgeChange} style={{ width: '100%' }} />
@@ -296,7 +309,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     if (currentSlide === 'dinero') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 3" icon={Coins} title="¿Cuánto dinero se te va normalmente en una semana?" subtitle="Esto nos sirve para estimar el costo real del hábito y mostrar mejor lo que estás recuperando.">
+        <SlideShell theme={theme} stepLabel="PREGUNTA 3" icon={Coins} title="ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿CuÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡nto dinero se te va normalmente en una semana?" subtitle="Esto nos sirve para estimar el costo real del hÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡bito y mostrar mejor lo que estÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s recuperando.">
           <div style={{ display: 'grid', gap: 12 }}>
             {spendRanges.map((option) => (
               <ChoiceCard key={option.label} label={option.label} selected={form.averageSpend === option.value} onClick={() => selectAndAdvance('averageSpend', option.value)} theme={theme} icon={Coins} />
@@ -308,7 +321,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     if (currentSlide === 'tiempo') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 4" icon={Clock3} title="¿Cuánto tiempo pierdes en un día normal?" subtitle="Nos referimos al tiempo revisando cuotas, estadísticas, resultados, apps de marcadores o pensando en la siguiente apuesta.">
+        <SlideShell theme={theme} stepLabel="PREGUNTA 4" icon={Clock3} title="ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿CuÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡nto tiempo pierdes en un dÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­a normal?" subtitle="Nos referimos al tiempo revisando cuotas, estadÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­sticas, resultados, apps de marcadores o pensando en la siguiente apuesta.">
           <div style={{ display: 'grid', gap: 12 }}>
             {timeRanges.map((option) => (
               <ChoiceCard key={option.label} label={option.label} selected={form.hoursLostPerDay === option.value} onClick={() => selectAndAdvance('hoursLostPerDay', option.value)} theme={theme} icon={Clock3} />
@@ -320,15 +333,15 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     if (currentSlide === 'motivo') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 5" icon={Target} title="¿Por qué quieres cambiar esta historia?" subtitle="Escribe lo que te hizo decir basta. Esto luego nos ayuda a personalizar mejor el tono del asistente.">
-          <textarea value={form.reason} onChange={(event) => update('reason', event.target.value)} placeholder="Ej: me cansé de perder foco, dinero y tranquilidad por estar pendiente del juego" required rows={5} style={{ width: '100%', border: `1px solid ${theme.border}`, borderRadius: 20, padding: '16px 18px', resize: 'vertical', background: theme.input, color: theme.text, fontFamily: 'inherit', fontSize: 15, transition: theme.transition }} />
+        <SlideShell theme={theme} stepLabel="PREGUNTA 5" icon={Target} title="ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿Por quÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© quieres cambiar esta historia?" subtitle="Escribe lo que te hizo decir basta. Esto luego nos ayuda a personalizar mejor el tono del asistente.">
+          <textarea value={form.reason} onChange={(event) => update('reason', event.target.value)} placeholder="Ej: me cansÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© de perder foco, dinero y tranquilidad por estar pendiente del juego" required rows={5} style={{ width: '100%', border: `1px solid ${theme.border}`, borderRadius: 20, padding: '16px 18px', resize: 'vertical', background: theme.input, color: theme.text, fontFamily: 'inherit', fontSize: 15, transition: theme.transition }} />
         </SlideShell>
       )
     }
 
     if (currentSlide === 'juego') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 6" icon={Trophy} title="¿En qué tipo de juego o apuesta caes más?" subtitle="Queremos entender el contexto principal del problema para no asumir que todo pasa solo por apuestas deportivas.">
+        <SlideShell theme={theme} stepLabel="PREGUNTA 6" icon={Trophy} title="ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿En quÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© tipo de juego o apuesta caes mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s?" subtitle="Queremos entender el contexto principal del problema para no asumir que todo pasa solo por apuestas deportivas.">
           <PillGrid items={bettingTypes} selectedValue={form.bettingType} onSelect={(value) => selectAndAdvance('bettingType', value)} theme={theme} />
         </SlideShell>
       )
@@ -336,7 +349,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     if (currentSlide === 'impulso') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 7" icon={Sparkles} title="¿Qué te empuja más a apostar?" subtitle="Puedes elegir hasta 3. Esto nos ayuda a entender si el impulso viene más por ansiedad, adrenalina, aburrimiento o necesidad de recuperar pérdidas.">
+        <SlideShell theme={theme} stepLabel="PREGUNTA 7" icon={Sparkles} title="ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿QuÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© te empuja mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s a apostar?" subtitle="Puedes elegir hasta 3. Esto nos ayuda a entender si el impulso viene mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s por ansiedad, adrenalina, aburrimiento o necesidad de recuperar pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©rdidas.">
           <MultiSelectGrid items={incitementOptions} selectedValues={form.incitement} onToggle={toggleIncitement} theme={theme} helper="Puedes marcar hasta 3." />
         </SlideShell>
       )
@@ -344,14 +357,14 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     if (currentSlide === 'foco') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 8" icon={Trophy} title="¿En qué deportes o tipos de juego caes más?" subtitle="Puedes elegir varias opciones. En Free usaremos esto para alertas generales; el bloqueo de apps y el seguimiento de tiempo por páginas quedan para Premium.">
-          <MultiSelectGrid items={focusOptions} selectedValues={form.sportFocus} onToggle={toggleFocus} theme={theme} helper="Puedes marcar hasta 3. Ejemplo: NBA y Fútbol." />
+        <SlideShell theme={theme} stepLabel="PREGUNTA 8" icon={Trophy} title="ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿En quÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© deportes o tipos de juego caes mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s?" subtitle="Puedes elegir varias opciones. En Free usaremos esto para alertas generales; el bloqueo de apps y el seguimiento de tiempo por pÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ginas quedan para Premium.">
+          <MultiSelectGrid items={focusOptions} selectedValues={form.sportFocus} onToggle={toggleFocus} theme={theme} helper="Puedes marcar hasta 3. Ejemplo: NBA y FÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºtbol." />
         </SlideShell>
       )
     }
 
     return (
-      <SlideShell theme={theme} stepLabel="PREGUNTA 9" icon={ShieldCheck} title="¿Qué quieres recuperar primero?" subtitle="Elige lo que más te importa hoy. Esto será parte central de los recordatorios y del progreso que te mostrará STOP.">
+      <SlideShell theme={theme} stepLabel="PREGUNTA 9" icon={ShieldCheck} title="ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿QuÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© quieres recuperar primero?" subtitle="Elige lo que mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s te importa hoy. Esto serÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ parte central de los recordatorios y del progreso que te mostrarÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ STOP.">
         <PillGrid items={goalOptions} selectedValue={form.goal} onSelect={(value) => selectAndAdvance('goal', value)} theme={theme} />
       </SlideShell>
     )
@@ -374,13 +387,13 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
             STOP
           </div>
           <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.03 }}>Construyamos tu punto de partida</h1>
-          <p style={{ margin: '12px 0 14px', color: '#dbeafe', lineHeight: 1.6 }}>Una pantalla a la vez. Queremos que esto se sienta claro, guiado y fácil de responder.</p>
+          <p style={{ margin: '12px 0 14px', color: '#dbeafe', lineHeight: 1.6 }}>Una pantalla a la vez. Queremos que esto se sienta claro, guiado y fÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡cil de responder.</p>
           <div style={{ height: 10, borderRadius: 999, background: 'rgba(255,255,255,0.14)', overflow: 'hidden' }}>
             <div style={{ width: `${progress}%`, height: '100%', borderRadius: 999, background: 'linear-gradient(90deg, #93c5fd 0%, #34d399 100%)' }} />
           </div>
         </section>
 
-        <section style={{ background: theme.surface, borderRadius: 24, padding: 18, border: `1px solid ${theme.border}`, boxShadow: theme.shadow, marginBottom: 18, backdropFilter: 'blur(18px)', transition: theme.transition }}>
+        <section style={{ background: theme.surface, borderRadius: 24, padding: 18, border: `1px solid ${theme.border}`, boxShadow: theme.shadow, marginBottom: 18, transition: theme.transition }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 8, color: theme.text, fontWeight: 800 }}>
             <Sparkles size={16} color="#1d4ed8" />
             Perspectiva general
@@ -405,7 +418,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
               <ShieldCheck size={16} />
               Esto no es solo registro
             </div>
-            Tus respuestas van a personalizar el tono de STOP, el cálculo del costo real, el asistente, futuras alertas y los recordatorios más sensibles a tu caso.
+            Tus respuestas van a personalizar el tono de STOP, el cÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡lculo del costo real, el asistente, futuras alertas y los recordatorios mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡s sensibles a tu caso.
           </section>
 
           <div style={{ display: 'grid', gridTemplateColumns: slideIndex > 0 ? '0.78fr 1fr' : '1fr', gap: 10 }}>

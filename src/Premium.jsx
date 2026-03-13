@@ -122,7 +122,7 @@ function TabButton({ active, label, onClick, theme }) {
         transition: theme.transition,
       }}
     >
-      {label}
+      {decodeText(label)}
     </button>
   )
 }
@@ -151,10 +151,10 @@ function PlanCard({ title, subtitle, price, badge, highlighted, note, theme }) {
           {badge}
         </div>
       ) : null}
-      <div style={{ color: theme.text, fontWeight: 900, fontSize: 20, marginBottom: 6 }}>{title}</div>
-      <div style={{ color: theme.muted, lineHeight: 1.55, marginBottom: 14 }}>{subtitle}</div>
+      <div style={{ color: theme.text, fontWeight: 900, fontSize: 20, marginBottom: 6 }}>{decodeText(title)}</div>
+      <div style={{ color: theme.muted, lineHeight: 1.55, marginBottom: 14 }}>{decodeText(subtitle)}</div>
       <div style={{ color: theme.text, fontSize: 36, fontWeight: 900, lineHeight: 1 }}>{price}</div>
-      <div style={{ color: theme.subtle, fontSize: 13, marginTop: 8 }}>{note}</div>
+      <div style={{ color: theme.subtle, fontSize: 13, marginTop: 8 }}>{decodeText(note)}</div>
     </div>
   )
 }
@@ -162,7 +162,7 @@ function PlanCard({ title, subtitle, price, badge, highlighted, note, theme }) {
 function PremiumStat({ label, value }) {
   return (
     <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 20, padding: 14 }}>
-      <div style={{ color: '#bfdbfe', fontSize: 11, fontWeight: 900, letterSpacing: 0.4, marginBottom: 6 }}>{label}</div>
+      <div style={{ color: '#bfdbfe', fontSize: 11, fontWeight: 900, letterSpacing: 0.4, marginBottom: 6 }}>{decodeText(label)}</div>
       <div style={{ fontSize: 20, fontWeight: 900, color: '#fff' }}>{value}</div>
     </div>
   )
@@ -221,13 +221,13 @@ export default function Premium({
               {isPostDiagnostic ? (
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: diagnosticTone.surface, borderRadius: 999, padding: '8px 12px', color: '#fff', fontWeight: 800, fontSize: 12 }}>
                   <Sparkles size={14} color="#fff" />
-                  {diagnosticTone.label}
+                  {decodeText(diagnosticTone.label)}
                 </div>
               ) : null}
             </div>
 
             <h1 style={{ margin: 0, fontSize: 36, lineHeight: 1.02 }}>
-              {isPostDiagnostic ? 'Tu resultado merece m\u00e1s apoyo y m\u00e1s barreras' : 'M\u00e1s apoyo cuando m\u00e1s lo necesitas'}
+              {decodeText(isPostDiagnostic ? 'Tu resultado merece m\\u00e1s apoyo y m\\u00e1s barreras' : 'M\\u00e1s apoyo cuando m\\u00e1s lo necesitas')}
             </h1>
             <p style={{ margin: '12px 0 18px', color: '#dbeafe', lineHeight: 1.6 }}>
               {isPostDiagnostic
@@ -260,18 +260,18 @@ export default function Premium({
           <section style={{ ...baseCard, marginBottom: 18, background: theme.mode === 'dark' ? 'linear-gradient(145deg, rgba(15,23,42,0.88) 0%, rgba(15,118,110,0.18) 100%)' : 'linear-gradient(145deg, #ffffff 0%, #ecfeff 100%)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
               <ShieldCheck size={18} color={supportAccent} />
-              <div style={{ color: theme.text, fontWeight: 800 }}>{'Por qu\u00e9 este plan tiene sentido para ti'}</div>
+              <div style={{ color: theme.text, fontWeight: 800 }}>{decodeText('Por qu\u00e9 este plan tiene sentido para ti')}</div>
             </div>
-            <div style={{ color: theme.muted, lineHeight: 1.65, marginBottom: 14 }}>{diagnosticTone.text}</div>
+            <div style={{ color: theme.muted, lineHeight: 1.65, marginBottom: 14 }}>{decodeText(diagnosticTone.text)}</div>
             <div style={{ display: 'grid', gap: 10 }}>
               <div style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.55, transition: theme.transition }}>
-                {'M\u00e1s barreras antes del impulso, para no depender solo de fuerza de voluntad.'}
+                {decodeText('M\u00e1s barreras antes del impulso, para no depender solo de fuerza de voluntad.')}
               </div>
               <div style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.55, transition: theme.transition }}>
-                {'M\u00e1s claridad para entender tus reca\u00eddas y dejar de improvisar cuando llega el gatillo.'}
+                {decodeText('M\u00e1s claridad para entender tus reca\u00eddas y dejar de improvisar cuando llega el gatillo.')}
               </div>
               <div style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.55, transition: theme.transition }}>
-                {'M\u00e1s apoyo sostenido, para que STOP se sienta como una herramienta seria y no solo un recordatorio.'}
+                {decodeText('M\u00e1s apoyo sostenido, para que STOP se sienta como una herramienta seria y no solo un recordatorio.')}
               </div>
             </div>
           </section>
@@ -292,19 +292,19 @@ export default function Premium({
                 <div style={{ color: theme.text, fontWeight: 800 }}>Actual vs STOP PRO</div>
               </div>
               <div style={{ color: theme.muted, lineHeight: 1.65, marginBottom: 14 }}>
-                {'La diferencia no es tener m\u00e1s botones. La diferencia es tener m\u00e1s apoyo, m\u00e1s prevenci\u00f3n y m\u00e1s claridad cuando el impulso aparece de verdad.'}
+                {decodeText('La diferencia no es tener m\u00e1s botones. La diferencia es tener m\u00e1s apoyo, m\u00e1s prevenci\u00f3n y m\u00e1s claridad cuando el impulso aparece de verdad.')}
               </div>
               <div style={{ display: 'grid', gap: 10 }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.95fr 1fr', gap: 10, alignItems: 'center', padding: '0 4px 2px' }}>
-                  <div style={{ color: theme.subtle, fontSize: 12, fontWeight: 900, letterSpacing: 0.4 }}>FUNCI\u00d3N</div>
+                  <div style={{ color: theme.subtle, fontSize: 12, fontWeight: 900, letterSpacing: 0.4 }}>{decodeText('FUNCI\u00d3N')}</div>
                   <div style={{ color: theme.subtle, fontSize: 12, fontWeight: 900, letterSpacing: 0.4 }}>ACTUAL</div>
                   <div style={{ color: proAccent, fontSize: 12, fontWeight: 900, letterSpacing: 0.4 }}>STOP PRO</div>
                 </div>
                 {comparisonRows.map((row) => (
-                  <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.95fr 1fr', gap: 10, alignItems: 'center', background: cardSurface, borderRadius: 18, padding: '14px 16px', border, transition: theme.transition }}>
-                    <div style={{ color: theme.text, fontWeight: 800 }}>{row.label}</div>
-                    <div style={{ color: theme.muted, fontSize: 13, fontWeight: 700 }}>{row.current}</div>
-                    <div style={{ color: proAccent, fontWeight: 800, fontSize: 13 }}>{row.pro}</div>
+                  <div key={decodeText(row.label)} style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.95fr 1fr', gap: 10, alignItems: 'center', background: cardSurface, borderRadius: 18, padding: '14px 16px', border, transition: theme.transition }}>
+                    <div style={{ color: theme.text, fontWeight: 800 }}>{decodeText(row.label)}</div>
+                    <div style={{ color: theme.muted, fontSize: 13, fontWeight: 700 }}>{decodeText(row.current)}</div>
+                    <div style={{ color: proAccent, fontWeight: 800, fontSize: 13 }}>{decodeText(row.pro)}</div>
                   </div>
                 ))}
               </div>
@@ -312,11 +312,11 @@ export default function Premium({
 
             <div style={{ display: 'grid', gap: 12, marginBottom: 18 }}>
               {premiumFeatures.map(({ icon: Icon, title, text, tone }) => (
-                <section key={title} style={baseCard}>
+                <section key={decodeText(title)} style={baseCard}>
                   <div style={{ width: 48, height: 48, borderRadius: 16, background: `${tone}18`, display: 'grid', placeItems: 'center', marginBottom: 12, transition: theme.transition }}>
                     <Icon size={20} color={tone} />
                   </div>
-                  <div style={{ color: theme.text, fontWeight: 800, fontSize: 17, marginBottom: 6 }}>{title}</div>
+                  <div style={{ color: theme.text, fontWeight: 800, fontSize: 17, marginBottom: 6 }}>{decodeText(title)}</div>
                   <div style={{ color: theme.muted, lineHeight: 1.6 }}>{text}</div>
                 </section>
               ))}
@@ -329,8 +329,8 @@ export default function Premium({
               </div>
               <div style={{ display: 'grid', gap: 10 }}>
                 {premiumMoments.map((item) => (
-                  <div key={item} style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.5, transition: theme.transition }}>
-                    {item}
+                  <div key={decodeText(item)} style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.5, transition: theme.transition }}>
+                    {decodeText(item)}
                   </div>
                 ))}
               </div>
@@ -360,7 +360,7 @@ export default function Premium({
             <section style={{ ...baseCard, marginBottom: 18 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                 <TrendingUp size={18} color={proAccent} />
-                <div style={{ color: theme.text, fontWeight: 800 }}>{'Lo que podr\u00edas empezar a notar con m\u00e1s apoyo'}</div>
+                <div style={{ color: theme.text, fontWeight: 800 }}>{decodeText('Lo que podr\u00edas empezar a notar con m\u00e1s apoyo')}</div>
               </div>
               <div style={{ display: 'grid', gap: 10 }}>
                 {previewStats.map((item) => (
@@ -380,7 +380,7 @@ export default function Premium({
                 <Sparkles size={18} />
                 Lo exclusivo de STOP PRO
               </div>
-              {'El bloqueo de apps y sitios, las estad\u00edsticas de tiempo perdido por p\u00e1ginas y la lectura m\u00e1s profunda de tus horarios de riesgo viven en esta capa porque apuntan a prevenir reca\u00eddas reales, no solo a mostrarte n\u00fameros bonitos.'}
+              {decodeText('El bloqueo de apps y sitios, las estad\u00edsticas de tiempo perdido por p\u00e1ginas y la lectura m\u00e1s profunda de tus horarios de riesgo viven en esta capa porque apuntan a prevenir reca\u00eddas reales, no solo a mostrarte n\u00fameros bonitos.')}
             </section>
           </>
         )}
@@ -391,7 +391,7 @@ export default function Premium({
 
         {isPostDiagnostic ? (
           <button type="button" onClick={onContinueCurrent} style={{ width: '100%', border, borderRadius: 24, padding: '14px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, boxShadow: theme.shadow, transition: theme.transition, marginBottom: 8 }}>
-            {'Seguir con mi versi\u00f3n actual'}
+            {decodeText('Seguir con mi versi\u00f3n actual')}
           </button>
         ) : (
           <button type="button" onClick={onOpenEducation} style={{ width: '100%', border, borderRadius: 24, padding: '14px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, boxShadow: theme.shadow, transition: theme.transition, marginBottom: 8 }}>

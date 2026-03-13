@@ -11,7 +11,7 @@ export function saveThemeMode(mode) {
 }
 
 export function getTheme(mode = 'light') {
-  const transition = 'background 280ms ease, color 280ms ease, border-color 280ms ease, box-shadow 280ms ease, transform 280ms ease, opacity 280ms ease'
+  const transition = 'background 180ms ease, color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, opacity 180ms ease'
 
   if (mode === 'dark') {
     return {
