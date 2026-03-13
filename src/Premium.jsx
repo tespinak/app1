@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   ArrowLeft,
   Bot,
@@ -79,6 +79,33 @@ const premiumMoments = [
   'Despu\u00e9s: transforma lo que pas\u00f3 en informaci\u00f3n \u00fatil, no en culpa.',
 ]
 
+function getDiagnosticTone(level) {
+  if (level === 'alto') {
+    return {
+      label: 'Prioridad alta',
+      text: 'Tu resultado sugiere que necesitas m\u00e1s barreras y m\u00e1s acompa\u00f1amiento desde ahora.',
+      accent: '#ef4444',
+      surface: 'rgba(239,68,68,0.14)',
+    }
+  }
+
+  if (level === 'moderado') {
+    return {
+      label: 'Conviene intervenir ya',
+      text: 'Todav\u00eda est\u00e1s a tiempo de cortar el patr\u00f3n antes de que tome m\u00e1s espacio.',
+      accent: '#f59e0b',
+      surface: 'rgba(245,158,11,0.16)',
+    }
+  }
+
+  return {
+    label: 'Buen momento para afirmarte',
+    text: 'Este es un buen punto para poner barreras temprano y no normalizar reca\u00eddas peque\u00f1as.',
+    accent: '#10b981',
+    surface: 'rgba(16,185,129,0.16)',
+  }
+}
+
 function TabButton({ active, label, onClick, theme }) {
   return (
     <button
@@ -104,17 +131,17 @@ function PlanCard({ title, subtitle, price, badge, highlighted, note, theme }) {
   return (
     <div
       style={{
-        borderRadius: 26,
-        padding: 18,
-        border: highlighted ? '1px solid rgba(147,197,253,0.24)' : `1px solid ${theme.border}`,
+        borderRadius: 28,
+        padding: 20,
+        border: highlighted ? '1px solid rgba(147,197,253,0.28)' : `1px solid ${theme.border}`,
         background: highlighted
           ? theme.mode === 'dark'
-            ? 'linear-gradient(145deg, rgba(29,78,216,0.24) 0%, rgba(8,47,73,0.78) 100%)'
+            ? 'linear-gradient(145deg, rgba(29,78,216,0.30) 0%, rgba(8,47,73,0.82) 100%)'
             : 'linear-gradient(145deg, #eff6ff 0%, #ecfeff 100%)'
           : theme.mode === 'dark'
-            ? 'rgba(15,23,42,0.82)'
+            ? 'rgba(15,23,42,0.84)'
             : '#f8fafc',
-        boxShadow: highlighted ? '0 22px 48px rgba(29,78,216,0.18)' : theme.shadow,
+        boxShadow: highlighted ? '0 26px 54px rgba(29,78,216,0.20)' : theme.shadow,
         transition: theme.transition,
       }}
     >
@@ -126,8 +153,17 @@ function PlanCard({ title, subtitle, price, badge, highlighted, note, theme }) {
       ) : null}
       <div style={{ color: theme.text, fontWeight: 900, fontSize: 20, marginBottom: 6 }}>{title}</div>
       <div style={{ color: theme.muted, lineHeight: 1.55, marginBottom: 14 }}>{subtitle}</div>
-      <div style={{ color: theme.text, fontSize: 34, fontWeight: 900, lineHeight: 1 }}>{price}</div>
-      <div style={{ color: theme.subtle, fontSize: 13, marginTop: 6 }}>{note}</div>
+      <div style={{ color: theme.text, fontSize: 36, fontWeight: 900, lineHeight: 1 }}>{price}</div>
+      <div style={{ color: theme.subtle, fontSize: 13, marginTop: 8 }}>{note}</div>
+    </div>
+  )
+}
+
+function PremiumStat({ label, value }) {
+  return (
+    <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 20, padding: 14 }}>
+      <div style={{ color: '#bfdbfe', fontSize: 11, fontWeight: 900, letterSpacing: 0.4, marginBottom: 6 }}>{label}</div>
+      <div style={{ fontSize: 20, fontWeight: 900, color: '#fff' }}>{value}</div>
     </div>
   )
 }
@@ -144,12 +180,13 @@ export default function Premium({
   onToggleTheme,
 }) {
   const theme = getTheme(themeMode)
-  const [activeTab, setActiveTab] = useState('overview')
+  const isPostDiagnostic = context === 'post-diagnostic'
+  const [activeTab, setActiveTab] = useState(isPostDiagnostic ? 'pricing' : 'overview')
   const border = `1px solid ${theme.border}`
   const cardSurface = theme.mode === 'dark' ? 'rgba(15,23,42,0.78)' : '#f8fafc'
   const proAccent = '#2563eb'
   const supportAccent = '#0f766e'
-  const isPostDiagnostic = context === 'post-diagnostic'
+  const diagnosticTone = useMemo(() => getDiagnosticTone(profile.diagnosticLevel), [profile.diagnosticLevel])
   const baseCard = {
     background: theme.surface,
     backdropFilter: 'blur(16px)',
@@ -171,14 +208,24 @@ export default function Premium({
           <ThemeToggle mode={themeMode} onToggle={onToggleTheme} />
         </div>
 
-        <section style={{ position: 'relative', overflow: 'hidden', background: theme.hero, color: '#fff', borderRadius: 36, padding: 24, boxShadow: theme.shadow, marginBottom: 18, transition: theme.transition }}>
+        <section style={{ position: 'relative', overflow: 'hidden', background: isPostDiagnostic ? 'linear-gradient(145deg, #081225 0%, #17356c 48%, #2563eb 100%)' : theme.hero, color: '#fff', borderRadius: 36, padding: 24, boxShadow: theme.shadow, marginBottom: 18, transition: theme.transition }}>
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,255,255,0.04), transparent 38%)' }} />
           <div style={{ position: 'absolute', top: -44, right: -24, width: 170, height: 170, background: 'radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.02) 72%)', borderRadius: '50%' }} />
+          {isPostDiagnostic ? <div style={{ position: 'absolute', left: -44, bottom: -54, width: 190, height: 190, background: 'radial-gradient(circle, rgba(16,185,129,0.18) 0%, rgba(16,185,129,0.02) 72%)', borderRadius: '50%' }} /> : null}
           <div style={{ position: 'relative' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.10)', borderRadius: 999, padding: '8px 12px', marginBottom: 14 }}>
-              <Gem size={16} color="#93c5fd" />
-              STOP PRO
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.10)', borderRadius: 999, padding: '8px 12px' }}>
+                <Gem size={16} color="#93c5fd" />
+                STOP PRO
+              </div>
+              {isPostDiagnostic ? (
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: diagnosticTone.surface, borderRadius: 999, padding: '8px 12px', color: '#fff', fontWeight: 800, fontSize: 12 }}>
+                  <Sparkles size={14} color="#fff" />
+                  {diagnosticTone.label}
+                </div>
+              ) : null}
             </div>
+
             <h1 style={{ margin: 0, fontSize: 36, lineHeight: 1.02 }}>
               {isPostDiagnostic ? 'Tu resultado merece m\u00e1s apoyo y m\u00e1s barreras' : 'M\u00e1s apoyo cuando m\u00e1s lo necesitas'}
             </h1>
@@ -187,10 +234,18 @@ export default function Premium({
                 ? 'Con tu versi\u00f3n actual puedes empezar. Con STOP PRO puedes anticiparte mejor al impulso, entender tu patr\u00f3n y activar m\u00e1s protecci\u00f3n antes de caer.'
                 : 'STOP PRO est\u00e1 pensado para cuando ya no quieres depender solo de fuerza de voluntad. Te ayuda a anticiparte, sostenerte y entender mejor lo que te pasa.'}
             </p>
+
             {isPostDiagnostic ? (
-              <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 22, padding: 16, lineHeight: 1.55 }}>
-                <div style={{ fontWeight: 900, marginBottom: 6 }}>No se trata de hacerlo perfecto.</div>
-                <div style={{ color: '#dbeafe' }}>Se trata de dejar de pelear solo y sumar apoyo real cuando sabes que el riesgo ya existe.</div>
+              <div style={{ display: 'grid', gap: 12 }}>
+                <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 24, padding: 18, lineHeight: 1.55 }}>
+                  <div style={{ fontWeight: 900, marginBottom: 6 }}>No se trata de hacerlo perfecto.</div>
+                  <div style={{ color: '#dbeafe' }}>Se trata de dejar de pelear solo y sumar apoyo real cuando sabes que el riesgo ya existe.</div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10 }}>
+                  <PremiumStat label="TU RESULTADO" value={(profile.diagnosticLevel || 'moderado').toUpperCase()} />
+                  <PremiumStat label="PLAN" value="ANUAL" />
+                  <PremiumStat label="AHORRO" value="$11.890" />
+                </div>
               </div>
             ) : (
               <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 22, padding: 16, lineHeight: 1.55 }}>
@@ -200,6 +255,27 @@ export default function Premium({
             )}
           </div>
         </section>
+
+        {isPostDiagnostic ? (
+          <section style={{ ...baseCard, marginBottom: 18, background: theme.mode === 'dark' ? 'linear-gradient(145deg, rgba(15,23,42,0.88) 0%, rgba(15,118,110,0.18) 100%)' : 'linear-gradient(145deg, #ffffff 0%, #ecfeff 100%)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+              <ShieldCheck size={18} color={supportAccent} />
+              <div style={{ color: theme.text, fontWeight: 800 }}>Por qu\u00e9 este plan tiene sentido para ti</div>
+            </div>
+            <div style={{ color: theme.muted, lineHeight: 1.65, marginBottom: 14 }}>{diagnosticTone.text}</div>
+            <div style={{ display: 'grid', gap: 10 }}>
+              <div style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.55, transition: theme.transition }}>
+                M\u00e1s barreras antes del impulso, para no depender solo de fuerza de voluntad.
+              </div>
+              <div style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.55, transition: theme.transition }}>
+                M\u00e1s claridad para entender tus reca\u00eddas y dejar de improvisar cuando llega el gatillo.
+              </div>
+              <div style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.55, transition: theme.transition }}>
+                M\u00e1s apoyo sostenido, para que STOP se sienta como una herramienta seria y no solo un recordatorio.
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         <section style={{ ...baseCard, marginBottom: 18, padding: 10, background: theme.segmentedSurface }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
