@@ -260,18 +260,18 @@ export default function Premium({
           <section style={{ ...baseCard, marginBottom: 18, background: theme.mode === 'dark' ? 'linear-gradient(145deg, rgba(15,23,42,0.88) 0%, rgba(15,118,110,0.18) 100%)' : 'linear-gradient(145deg, #ffffff 0%, #ecfeff 100%)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
               <ShieldCheck size={18} color={supportAccent} />
-              <div style={{ color: theme.text, fontWeight: 800 }}>Por qu\u00e9 este plan tiene sentido para ti</div>
+              <div style={{ color: theme.text, fontWeight: 800 }}>{'Por qu\u00e9 este plan tiene sentido para ti'}</div>
             </div>
             <div style={{ color: theme.muted, lineHeight: 1.65, marginBottom: 14 }}>{diagnosticTone.text}</div>
             <div style={{ display: 'grid', gap: 10 }}>
               <div style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.55, transition: theme.transition }}>
-                M\u00e1s barreras antes del impulso, para no depender solo de fuerza de voluntad.
+                {'M\u00e1s barreras antes del impulso, para no depender solo de fuerza de voluntad.'}
               </div>
               <div style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.55, transition: theme.transition }}>
-                M\u00e1s claridad para entender tus reca\u00eddas y dejar de improvisar cuando llega el gatillo.
+                {'M\u00e1s claridad para entender tus reca\u00eddas y dejar de improvisar cuando llega el gatillo.'}
               </div>
               <div style={{ background: cardSurface, borderRadius: 18, padding: '14px 16px', border, color: theme.text, fontWeight: 700, lineHeight: 1.55, transition: theme.transition }}>
-                M\u00e1s apoyo sostenido, para que STOP se sienta como una herramienta seria y no solo un recordatorio.
+                {'M\u00e1s apoyo sostenido, para que STOP se sienta como una herramienta seria y no solo un recordatorio.'}
               </div>
             </div>
           </section>
@@ -292,7 +292,7 @@ export default function Premium({
                 <div style={{ color: theme.text, fontWeight: 800 }}>Actual vs STOP PRO</div>
               </div>
               <div style={{ color: theme.muted, lineHeight: 1.65, marginBottom: 14 }}>
-                La diferencia no es tener m\u00e1s botones. La diferencia es tener m\u00e1s apoyo, m\u00e1s prevenci\u00f3n y m\u00e1s claridad cuando el impulso aparece de verdad.
+                {'La diferencia no es tener m\u00e1s botones. La diferencia es tener m\u00e1s apoyo, m\u00e1s prevenci\u00f3n y m\u00e1s claridad cuando el impulso aparece de verdad.'}
               </div>
               <div style={{ display: 'grid', gap: 10 }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.95fr 1fr', gap: 10, alignItems: 'center', padding: '0 4px 2px' }}>
@@ -360,7 +360,7 @@ export default function Premium({
             <section style={{ ...baseCard, marginBottom: 18 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                 <TrendingUp size={18} color={proAccent} />
-                <div style={{ color: theme.text, fontWeight: 800 }}>Lo que podr\u00edas empezar a notar con m\u00e1s apoyo</div>
+                <div style={{ color: theme.text, fontWeight: 800 }}>{'Lo que podr\u00edas empezar a notar con m\u00e1s apoyo'}</div>
               </div>
               <div style={{ display: 'grid', gap: 10 }}>
                 {previewStats.map((item) => (
@@ -380,7 +380,7 @@ export default function Premium({
                 <Sparkles size={18} />
                 Lo exclusivo de STOP PRO
               </div>
-              El bloqueo de apps y sitios, las estad\u00edsticas de tiempo perdido por p\u00e1ginas y la lectura m\u00e1s profunda de tus horarios de riesgo viven en esta capa porque apuntan a prevenir reca\u00eddas reales, no solo a mostrarte n\u00fameros bonitos.
+              {'El bloqueo de apps y sitios, las estad\u00edsticas de tiempo perdido por p\u00e1ginas y la lectura m\u00e1s profunda de tus horarios de riesgo viven en esta capa porque apuntan a prevenir reca\u00eddas reales, no solo a mostrarte n\u00fameros bonitos.'}
             </section>
           </>
         )}
@@ -391,7 +391,7 @@ export default function Premium({
 
         {isPostDiagnostic ? (
           <button type="button" onClick={onContinueCurrent} style={{ width: '100%', border, borderRadius: 24, padding: '14px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, boxShadow: theme.shadow, transition: theme.transition, marginBottom: 8 }}>
-            Seguir con mi versi\u00f3n actual
+            {'Seguir con mi versi\u00f3n actual'}
           </button>
         ) : (
           <button type="button" onClick={onOpenEducation} style={{ width: '100%', border, borderRadius: 24, padding: '14px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, boxShadow: theme.shadow, transition: theme.transition, marginBottom: 8 }}>

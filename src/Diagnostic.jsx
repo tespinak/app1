@@ -120,9 +120,9 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
               <Sparkles size={16} color="#bfdbfe" />
               Screening completado
             </div>
-            <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.03 }}>Aqu\u00ed est\u00e1 tu punto de partida</h1>
+            <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.03 }}>{'Aqu\u00ed est\u00e1 tu punto de partida'}</h1>
             <p style={{ margin: '12px 0 0', color: '#dbeafe', lineHeight: 1.6 }}>
-              Este no es un diagn\u00f3stico cl\u00ednico, pero s\u00ed una se\u00f1al \u00fatil para personalizar STOP y mostrarte un plan inicial m\u00e1s realista.
+              {'Este no es un diagn\u00f3stico cl\u00ednico, pero s\u00ed una se\u00f1al \u00fatil para personalizar STOP y mostrarte un plan inicial m\u00e1s realista.'}
             </p>
           </section>
 
@@ -140,7 +140,7 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
           <section style={{ background: theme.surface, borderRadius: 28, padding: 20, border: `1px solid ${theme.border}`, boxShadow: theme.shadow, marginBottom: 18, backdropFilter: 'blur(18px)', transition: theme.transition }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               <ShieldCheck size={18} color="#2563eb" />
-              <div style={{ color: theme.text, fontWeight: 800 }}>Plan de acci\u00f3n inicial</div>
+              <div style={{ color: theme.text, fontWeight: 800 }}>{'Plan de acci\u00f3n inicial'}</div>
             </div>
             <div style={{ display: 'grid', gap: 10 }}>
               {actionPlan.map((item) => (
@@ -154,7 +154,7 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
           <section style={{ background: theme.info, borderRadius: 22, padding: 18, color: theme.infoText, lineHeight: 1.55, marginBottom: 18, transition: theme.transition }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, marginBottom: 6 }}>
               <ShieldCheck size={16} />
-              \u00bfQu\u00e9 har\u00e1 STOP con esto?
+              {'\u00bfQu\u00e9 har\u00e1 STOP con esto?'}
             </div>
             Ajustaremos tono, nivel de alerta, prioridad de crisis, profundidad educativa y futuras capas como bloqueo, IA y horarios de riesgo.
           </section>
@@ -208,9 +208,9 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
             <Sparkles size={16} color="#bfdbfe" />
             Screening con base validada
           </div>
-          <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.03 }}>Ahora hagamos una lectura m\u00e1s seria</h1>
+          <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.03 }}>{'Ahora hagamos una lectura m\u00e1s seria'}</h1>
           <p style={{ margin: '12px 0 18px', color: '#dbeafe', lineHeight: 1.6 }}>
-            Este test est\u00e1 adaptado del PGSI, un instrumento ampliamente usado para detectar riesgo de juego problem\u00e1tico. No reemplaza una evaluaci\u00f3n cl\u00ednica, pero s\u00ed nos da una base m\u00e1s s\u00f3lida para personalizar STOP.
+            {'Este test est\u00e1 adaptado del PGSI, un instrumento ampliamente usado para detectar riesgo de juego problem\u00e1tico. No reemplaza una evaluaci\u00f3n cl\u00ednica, pero s\u00ed nos da una base m\u00e1s s\u00f3lida para personalizar STOP.'}
           </p>
           <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 22, padding: 14 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 8 }}>
@@ -224,9 +224,9 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
         </section>
 
         <section style={{ background: theme.surface, borderRadius: 28, padding: 18, border: `1px solid ${theme.border}`, boxShadow: theme.shadow, marginBottom: 18, backdropFilter: 'blur(18px)', transition: theme.transition }}>
-          <div style={{ color: theme.text, fontWeight: 800, marginBottom: 6 }}>\u00bfQu\u00e9 mide este screening?</div>
+          <div style={{ color: theme.text, fontWeight: 800, marginBottom: 6 }}>{'\u00bfQu\u00e9 mide este screening?'}</div>
           <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 14 }}>
-            Busca se\u00f1ales de p\u00e9rdida de control, persecuci\u00f3n de p\u00e9rdidas, impacto emocional, endeudamiento y da\u00f1o econ\u00f3mico durante los \u00faltimos 12 meses.
+            {'Busca se\u00f1ales de p\u00e9rdida de control, persecuci\u00f3n de p\u00e9rdidas, impacto emocional, endeudamiento y da\u00f1o econ\u00f3mico durante los \u00faltimos 12 meses.'}
           </div>
         </section>
 
@@ -246,7 +246,7 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
             </div>
             <div>
               <div style={{ color: theme.text, fontWeight: 800, lineHeight: 1.5, fontSize: 22 }}>{currentQuestion}</div>
-              <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 14, marginTop: 8 }}>Piensa en los \u00faltimos 12 meses y marca la opci\u00f3n que m\u00e1s se parece a tu caso.</div>
+              <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 14, marginTop: 8 }}>{'Piensa en los \u00faltimos 12 meses y marca la opci\u00f3n que m\u00e1s se parece a tu caso.'}</div>
             </div>
           </div>
           <div style={{ display: 'grid', gap: 10 }}>
