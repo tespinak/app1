@@ -1,4 +1,4 @@
-import { ArrowRight, Brain, CircleHelp, ShieldCheck, Sparkles } from 'lucide-react'
+﻿import { ArrowRight, Brain, CircleHelp, ShieldCheck, Sparkles } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import ThemeToggle from './ThemeToggle.jsx'
 import { getPgsiResult, pgsiOptions, pgsiQuestions } from './screening.js'
@@ -47,6 +47,16 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
     setAnswers((current) => current.map((item, itemIndex) => (itemIndex === index ? value : item)))
   }
 
+  const handleSelectAnswer = (value) => {
+    setAnswer(questionIndex, value)
+
+    if (questionIndex < pgsiQuestions.length - 1) {
+      window.setTimeout(() => {
+        setQuestionIndex((current) => (current < pgsiQuestions.length - 1 ? current + 1 : current))
+      }, 140)
+    }
+  }
+
   const handleNext = () => {
     if (currentAnswer === null) return
     if (questionIndex < pgsiQuestions.length - 1) {
@@ -75,6 +85,32 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
 
         <section style={{ position: 'relative', overflow: 'hidden', background: theme.hero, color: '#fff', borderRadius: 34, padding: 24, boxShadow: theme.shadow, marginBottom: 18, transition: theme.transition }}>
           <div style={{ position: 'absolute', top: -36, right: -20, width: 170, height: 170, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.03) 70%)' }} />
+          {questionIndex > 0 && (
+            <button
+              type="button"
+              onClick={() => setQuestionIndex((current) => current - 1)}
+              style={{
+                position: 'absolute',
+                top: 18,
+                right: 18,
+                border: '1px solid rgba(255,255,255,0.14)',
+                background: 'rgba(255,255,255,0.10)',
+                color: '#fff',
+                width: 36,
+                height: 36,
+                borderRadius: 999,
+                display: 'grid',
+                placeItems: 'center',
+                fontWeight: 900,
+                fontSize: 18,
+                backdropFilter: 'blur(10px)',
+                transition: theme.transition,
+              }}
+              aria-label="Volver a la pregunta anterior"
+            >
+              ←
+            </button>
+          )}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.12)', borderRadius: 999, padding: '8px 12px', marginBottom: 14 }}>
             <Sparkles size={16} color="#bfdbfe" />
             Screening con base validada
@@ -122,7 +158,7 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
           </div>
           <div style={{ display: 'grid', gap: 10 }}>
             {pgsiOptions.map((option) => (
-              <OptionButton key={option.label} option={option} selected={currentAnswer === option.value} onClick={() => setAnswer(questionIndex, option.value)} theme={theme} />
+              <OptionButton key={option.label} option={option} selected={currentAnswer === option.value} onClick={() => handleSelectAnswer(option.value)} theme={theme} />
             ))}
           </div>
         </section>
@@ -146,14 +182,9 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
           STOP usará este resultado para ajustar tono, nivel de alerta, prioridad de crisis, profundidad educativa y futuras capas como bloqueo, IA y horarios de riesgo.
         </section>
 
-        <div style={{ display: 'grid', gridTemplateColumns: questionIndex > 0 ? '0.78fr 1fr' : '1fr', gap: 10 }}>
-          {questionIndex > 0 && (
-            <button type="button" onClick={() => setQuestionIndex((current) => current - 1)} style={{ border: `1px solid ${theme.border}`, borderRadius: 24, padding: '16px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, transition: theme.transition }}>
-              Volver
-            </button>
-          )}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 10 }}>
           <button type="button" disabled={currentAnswer === null} onClick={handleNext} style={{ width: '100%', border: 'none', borderRadius: 24, padding: '16px 18px', background: currentAnswer !== null ? 'linear-gradient(145deg, #0f172a 0%, #1d4ed8 100%)' : '#94a3b8', color: '#fff', fontSize: 16, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: currentAnswer !== null ? '0 20px 45px rgba(29,78,216,0.22)' : 'none', transition: theme.transition }}>
-            {questionIndex === pgsiQuestions.length - 1 ? 'Entrar a mi Home personalizada' : 'Siguiente pregunta'}
+            {questionIndex === pgsiQuestions.length - 1 ? 'Entrar a mi Home personalizada' : 'Continuar manualmente'}
             <ArrowRight size={18} />
           </button>
         </div>
