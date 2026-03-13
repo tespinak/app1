@@ -5,32 +5,32 @@ import { getPgsiResult, pgsiOptions, pgsiQuestions } from './screening.js'
 import { getTheme } from './theme.js'
 
 function getResultAccent(result) {
-  if (result.level === 'alto') return 'Necesitas más barreras y más acompañamiento.'
+  if (result.level === 'alto') return 'Necesitas m\u00e1s barreras y m\u00e1s acompa\u00f1amiento.'
   if (result.level === 'moderado') return 'Ya hay impacto real. Vale la pena intervenir antes de que siga creciendo.'
-  return 'Estás en un punto donde actuar temprano puede cambiar mucho el curso.'
+  return 'Est\u00e1s en un punto donde actuar temprano puede cambiar mucho el curso.'
 }
 
 function getActionPlan(result) {
   if (result.level === 'alto') {
     return [
-      'Activa el botón de crisis y úsalo antes de cualquier impulso fuerte.',
-      'Corta el acceso rápido a apps, sitios y cuentas que te arrastran.',
-      'Cuéntale a una persona de confianza que necesitas apoyo real esta semana.',
+      'Activa el bot\u00f3n de crisis y \u00fasalo antes de cualquier impulso fuerte.',
+      'Corta el acceso r\u00e1pido a apps, sitios y cuentas que te arrastran.',
+      'Cu\u00e9ntale a una persona de confianza que necesitas apoyo real esta semana.',
     ]
   }
 
   if (result.level === 'moderado') {
     return [
-      'Empieza un check-in diario para detectar cuándo sube el impulso.',
-      'Activa fricción antes de horarios o torneos que te suelen gatillar.',
+      'Empieza un check-in diario para detectar cu\u00e1ndo sube el impulso.',
+      'Activa fricci\u00f3n antes de horarios o torneos que te suelen gatillar.',
       'Usa la biblioteca y el asistente para no improvisar cuando aparezca el impulso.',
     ]
   }
 
   return [
-    'Define límites claros antes de que el problema gane más espacio.',
-    'Mantén el check-in diario para detectar cambios temprano.',
-    'Refuerza tu motivo para cambiar y no normalices pequeñas recaídas.',
+    'Define l\u00edmites claros antes de que el problema gane m\u00e1s espacio.',
+    'Mant\u00e9n el check-in diario para detectar cambios temprano.',
+    'Refuerza tu motivo para cambiar y no normalices peque\u00f1as reca\u00eddas.',
   ]
 }
 
@@ -78,7 +78,7 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
       checkIn: Math.max(2, 10 - Math.min(score, 8)),
       motivation:
         initialProfile.ageRange === '18-24'
-          ? 'Todavía estás a tiempo de cortar esto antes de que se vuelva parte de tu identidad adulta.'
+          ? 'Todav\u00eda est\u00e1s a tiempo de cortar esto antes de que se vuelva parte de tu identidad adulta.'
           : `Cambiar ahora te ayuda a recuperar ${initialProfile.goal.toLowerCase()} antes de que el costo siga creciendo.`,
     }),
     [initialProfile.ageRange, initialProfile.goal, result.level, score],
@@ -120,9 +120,9 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
               <Sparkles size={16} color="#bfdbfe" />
               Screening completado
             </div>
-            <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.03 }}>Aquí está tu punto de partida</h1>
+            <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.03 }}>Aqu\u00ed est\u00e1 tu punto de partida</h1>
             <p style={{ margin: '12px 0 0', color: '#dbeafe', lineHeight: 1.6 }}>
-              Este no es un diagnóstico clínico, pero sí una señal útil para personalizar STOP y mostrarte un plan inicial más realista.
+              Este no es un diagn\u00f3stico cl\u00ednico, pero s\u00ed una se\u00f1al \u00fatil para personalizar STOP y mostrarte un plan inicial m\u00e1s realista.
             </p>
           </section>
 
@@ -140,7 +140,7 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
           <section style={{ background: theme.surface, borderRadius: 28, padding: 20, border: `1px solid ${theme.border}`, boxShadow: theme.shadow, marginBottom: 18, backdropFilter: 'blur(18px)', transition: theme.transition }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               <ShieldCheck size={18} color="#2563eb" />
-              <div style={{ color: theme.text, fontWeight: 800 }}>Plan de acción inicial</div>
+              <div style={{ color: theme.text, fontWeight: 800 }}>Plan de acci\u00f3n inicial</div>
             </div>
             <div style={{ display: 'grid', gap: 10 }}>
               {actionPlan.map((item) => (
@@ -154,13 +154,13 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
           <section style={{ background: theme.info, borderRadius: 22, padding: 18, color: theme.infoText, lineHeight: 1.55, marginBottom: 18, transition: theme.transition }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, marginBottom: 6 }}>
               <ShieldCheck size={16} />
-              ¿Qué hará STOP con esto?
+              \u00bfQu\u00e9 har\u00e1 STOP con esto?
             </div>
             Ajustaremos tono, nivel de alerta, prioridad de crisis, profundidad educativa y futuras capas como bloqueo, IA y horarios de riesgo.
           </section>
 
           <button type="button" onClick={() => onContinue(finalPayload)} style={{ width: '100%', border: 'none', borderRadius: 24, padding: '16px 18px', background: 'linear-gradient(145deg, #0f172a 0%, #1d4ed8 100%)', color: '#fff', fontSize: 16, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: '0 20px 45px rgba(29,78,216,0.22)', transition: theme.transition }}>
-            Entrar a mi Home personalizada
+            Ver mi plan recomendado
             <ArrowRight size={18} />
           </button>
         </div>
@@ -201,16 +201,16 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
               }}
               aria-label="Volver a la pregunta anterior"
             >
-              ←
+              {'\u2190'}
             </button>
           )}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.12)', borderRadius: 999, padding: '8px 12px', marginBottom: 14 }}>
             <Sparkles size={16} color="#bfdbfe" />
             Screening con base validada
           </div>
-          <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.03 }}>Ahora hagamos una lectura más seria</h1>
+          <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.03 }}>Ahora hagamos una lectura m\u00e1s seria</h1>
           <p style={{ margin: '12px 0 18px', color: '#dbeafe', lineHeight: 1.6 }}>
-            Este test está adaptado del PGSI, un instrumento ampliamente usado para detectar riesgo de juego problemático. No reemplaza una evaluación clínica, pero sí nos da una base más sólida para personalizar STOP.
+            Este test est\u00e1 adaptado del PGSI, un instrumento ampliamente usado para detectar riesgo de juego problem\u00e1tico. No reemplaza una evaluaci\u00f3n cl\u00ednica, pero s\u00ed nos da una base m\u00e1s s\u00f3lida para personalizar STOP.
           </p>
           <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 22, padding: 14 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 8 }}>
@@ -224,9 +224,9 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
         </section>
 
         <section style={{ background: theme.surface, borderRadius: 28, padding: 18, border: `1px solid ${theme.border}`, boxShadow: theme.shadow, marginBottom: 18, backdropFilter: 'blur(18px)', transition: theme.transition }}>
-          <div style={{ color: theme.text, fontWeight: 800, marginBottom: 6 }}>¿Qué mide este screening?</div>
+          <div style={{ color: theme.text, fontWeight: 800, marginBottom: 6 }}>\u00bfQu\u00e9 mide este screening?</div>
           <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 14 }}>
-            Busca señales de pérdida de control, persecución de pérdidas, impacto emocional, endeudamiento y daño económico durante los últimos 12 meses.
+            Busca se\u00f1ales de p\u00e9rdida de control, persecuci\u00f3n de p\u00e9rdidas, impacto emocional, endeudamiento y da\u00f1o econ\u00f3mico durante los \u00faltimos 12 meses.
           </div>
         </section>
 
@@ -246,7 +246,7 @@ export default function Diagnostic({ initialProfile, onContinue, themeMode, onTo
             </div>
             <div>
               <div style={{ color: theme.text, fontWeight: 800, lineHeight: 1.5, fontSize: 22 }}>{currentQuestion}</div>
-              <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 14, marginTop: 8 }}>Piensa en los últimos 12 meses y marca la opción que más se parece a tu caso.</div>
+              <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 14, marginTop: 8 }}>Piensa en los \u00faltimos 12 meses y marca la opci\u00f3n que m\u00e1s se parece a tu caso.</div>
             </div>
           </div>
           <div style={{ display: 'grid', gap: 10 }}>

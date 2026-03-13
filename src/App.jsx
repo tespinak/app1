@@ -56,6 +56,10 @@ function App() {
     const nextProfile = { ...profile, ...partialProfile }
     setProfile(nextProfile)
     saveProfile(nextProfile)
+    setStep('post-diagnostic-offer')
+  }
+
+  const handleEnterHome = () => {
     setStep('home')
     setScreen('home')
   }
@@ -75,6 +79,22 @@ function App() {
 
   if (step === 'diagnostic') {
     return <Diagnostic initialProfile={profile} onContinue={handleDiagnosticComplete} themeMode={themeMode} onToggleTheme={toggleTheme} />
+  }
+
+  if (step === 'post-diagnostic-offer') {
+    return (
+      <Premium
+        profile={profile}
+        currentScreen="premium"
+        onNavigate={setScreen}
+        onBack={handleEnterHome}
+        onOpenEducation={() => setScreen('education')}
+        onContinueCurrent={handleEnterHome}
+        context="post-diagnostic"
+        themeMode={themeMode}
+        onToggleTheme={toggleTheme}
+      />
+    )
   }
 
   if (screen === 'education') {
