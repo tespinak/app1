@@ -54,7 +54,8 @@ function ChoiceCard({ label, selected, onClick, theme, icon: Icon }) {
         textAlign: 'left',
         background: selected ? (theme.mode === 'dark' ? 'rgba(30,64,175,0.36)' : '#dbeafe') : theme.surface,
         color: theme.text,
-        boxShadow: selected ? '0 18px 36px rgba(29,78,216,0.18)' : theme.shadow,
+        boxShadow: selected ? '0 20px 40px rgba(29,78,216,0.20)' : theme.shadow,
+        transform: selected ? 'translateY(-2px) scale(1.01)' : 'translateY(0)',
         transition: theme.transition,
       }}
     >
@@ -85,6 +86,8 @@ function PillGrid({ items, selectedValue, onSelect, theme }) {
             fontWeight: 800,
             background: selectedValue === item ? '#1d4ed8' : theme.mode === 'dark' ? '#0f172a' : '#e2e8f0',
             color: selectedValue === item ? '#fff' : theme.text,
+            transform: selectedValue === item ? 'translateY(-2px) scale(1.01)' : 'translateY(0)',
+            boxShadow: selectedValue === item ? '0 18px 36px rgba(29,78,216,0.18)' : 'none',
             transition: theme.transition,
           }}
         >
@@ -116,6 +119,8 @@ function MultiSelectGrid({ items, selectedValues, onToggle, theme, helper }) {
                 fontWeight: 800,
                 background: selected ? '#1d4ed8' : theme.mode === 'dark' ? '#0f172a' : '#e2e8f0',
                 color: selected ? '#fff' : theme.text,
+                transform: selected ? 'translateY(-2px) scale(1.01)' : 'translateY(0)',
+                boxShadow: selected ? '0 18px 36px rgba(29,78,216,0.18)' : 'none',
                 transition: theme.transition,
               }}
             >
@@ -160,6 +165,7 @@ function SlideShell({ theme, icon: Icon, title, subtitle, stepLabel, children })
 export default function Onboarding({ initialProfile, onContinue, themeMode, onToggleTheme }) {
   const theme = getTheme(themeMode)
   const [slideIndex, setSlideIndex] = useState(0)
+  const [isAdvancing, setIsAdvancing] = useState(false)
   const [ageIndex, setAgeIndex] = useState(getAgeIndex(initialProfile.ageRange))
   const [form, setForm] = useState({
     name: initialProfile.name,
@@ -189,7 +195,51 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
     return false
   }, [currentSlide, form])
 
+  const finishOnboarding = (nextForm) => {
+    const focusLabel = nextForm.sportFocus.join(', ')
+    const inferredTrigger = [nextForm.bettingType, focusLabel, nextForm.incitement[0]].filter(Boolean).join(' | ')
+
+    onContinue({
+      ...nextForm,
+      sportFocus: focusLabel,
+      averageSpend: Number(nextForm.averageSpend),
+      hoursLostPerDay: Number(nextForm.hoursLostPerDay),
+      ageRange: ageMarks[ageIndex],
+      mainTrigger: inferredTrigger || initialProfile.mainTrigger,
+      motivation: `Estoy cambiando para recuperar ${nextForm.goal.toLowerCase()} y dejar de vivir pendiente de ${focusLabel || nextForm.bettingType.toLowerCase()}.`,
+    })
+  }
+
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }))
+
+  const goNext = () => {
+    if (slideIndex < slides.length - 1) {
+      setIsAdvancing(true)
+      window.setTimeout(() => {
+        setSlideIndex((current) => current + 1)
+        setIsAdvancing(false)
+      }, 150)
+      return
+    }
+
+    finishOnboarding(form)
+  }
+
+  const selectAndAdvance = (key, value) => {
+    const nextForm = { ...form, [key]: value }
+    setForm(nextForm)
+    setIsAdvancing(true)
+
+    window.setTimeout(() => {
+      if (slideIndex < slides.length - 1) {
+        setSlideIndex((current) => (current < slides.length - 1 ? current + 1 : current))
+        setIsAdvancing(false)
+      } else {
+        setIsAdvancing(false)
+        finishOnboarding(nextForm)
+      }
+    }, 170)
+  }
 
   const toggleIncitement = (label) => {
     setForm((current) => ({
@@ -218,24 +268,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
   const handleNext = (event) => {
     event.preventDefault()
     if (!canContinue) return
-
-    if (slideIndex < slides.length - 1) {
-      setSlideIndex((current) => current + 1)
-      return
-    }
-
-    const focusLabel = form.sportFocus.join(', ')
-    const inferredTrigger = [form.bettingType, focusLabel, form.incitement[0]].filter(Boolean).join(' | ')
-
-    onContinue({
-      ...form,
-      sportFocus: focusLabel,
-      averageSpend: Number(form.averageSpend),
-      hoursLostPerDay: Number(form.hoursLostPerDay),
-      ageRange: ageMarks[ageIndex],
-      mainTrigger: inferredTrigger || initialProfile.mainTrigger,
-      motivation: `Estoy cambiando para recuperar ${form.goal.toLowerCase()} y dejar de vivir pendiente de ${focusLabel || form.bettingType.toLowerCase()}.`,
-    })
+    goNext()
   }
 
   const renderSlide = () => {
@@ -265,7 +298,9 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
       return (
         <SlideShell theme={theme} stepLabel="PREGUNTA 3" icon={Coins} title="¿Cuánto dinero se te va normalmente en una semana?" subtitle="Esto nos sirve para estimar el costo real del hábito y mostrar mejor lo que estás recuperando.">
           <div style={{ display: 'grid', gap: 12 }}>
-            {spendRanges.map((option) => <ChoiceCard key={option.label} label={option.label} selected={form.averageSpend === option.value} onClick={() => update('averageSpend', option.value)} theme={theme} icon={Coins} />)}
+            {spendRanges.map((option) => (
+              <ChoiceCard key={option.label} label={option.label} selected={form.averageSpend === option.value} onClick={() => selectAndAdvance('averageSpend', option.value)} theme={theme} icon={Coins} />
+            ))}
           </div>
         </SlideShell>
       )
@@ -275,7 +310,9 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
       return (
         <SlideShell theme={theme} stepLabel="PREGUNTA 4" icon={Clock3} title="¿Cuánto tiempo pierdes en un día normal?" subtitle="Nos referimos al tiempo revisando cuotas, estadísticas, resultados, apps de marcadores o pensando en la siguiente apuesta.">
           <div style={{ display: 'grid', gap: 12 }}>
-            {timeRanges.map((option) => <ChoiceCard key={option.label} label={option.label} selected={form.hoursLostPerDay === option.value} onClick={() => update('hoursLostPerDay', option.value)} theme={theme} icon={Clock3} />)}
+            {timeRanges.map((option) => (
+              <ChoiceCard key={option.label} label={option.label} selected={form.hoursLostPerDay === option.value} onClick={() => selectAndAdvance('hoursLostPerDay', option.value)} theme={theme} icon={Clock3} />
+            ))}
           </div>
         </SlideShell>
       )
@@ -292,7 +329,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
     if (currentSlide === 'juego') {
       return (
         <SlideShell theme={theme} stepLabel="PREGUNTA 6" icon={Trophy} title="¿En qué tipo de juego o apuesta caes más?" subtitle="Queremos entender el contexto principal del problema para no asumir que todo pasa solo por apuestas deportivas.">
-          <PillGrid items={bettingTypes} selectedValue={form.bettingType} onSelect={(value) => update('bettingType', value)} theme={theme} />
+          <PillGrid items={bettingTypes} selectedValue={form.bettingType} onSelect={(value) => selectAndAdvance('bettingType', value)} theme={theme} />
         </SlideShell>
       )
     }
@@ -315,14 +352,14 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     return (
       <SlideShell theme={theme} stepLabel="PREGUNTA 9" icon={ShieldCheck} title="¿Qué quieres recuperar primero?" subtitle="Elige lo que más te importa hoy. Esto será parte central de los recordatorios y del progreso que te mostrará STOP.">
-        <PillGrid items={goalOptions} selectedValue={form.goal} onSelect={(value) => update('goal', value)} theme={theme} />
+        <PillGrid items={goalOptions} selectedValue={form.goal} onSelect={(value) => selectAndAdvance('goal', value)} theme={theme} />
       </SlideShell>
     )
   }
 
   return (
     <div style={{ minHeight: '100vh', padding: '24px 20px 40px', background: theme.canvas, transition: theme.transition }}>
-      <style>{`@keyframes stopFadeUp { 0% { opacity: 0; transform: translateY(12px) scale(0.985); } 100% { opacity: 1; transform: translateY(0) scale(1); } }`}</style>
+      <style>{`@keyframes stopFadeUp { 0% { opacity: 0; transform: translateY(12px) scale(0.985); } 100% { opacity: 1; transform: translateY(0) scale(1); } } @keyframes stopSoftPulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }`}</style>
       <div style={{ maxWidth: 460, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
           <div style={{ color: theme.subtle, fontSize: 13, fontWeight: 800 }}>Paso {slideIndex + 1} de {slides.length}</div>
@@ -355,11 +392,13 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
         <form onSubmit={handleNext} style={{ display: 'grid', gap: 14 }}>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {slides.map((_, index) => (
-              <div key={index} style={{ width: index === slideIndex ? 24 : 8, height: 8, borderRadius: 999, background: index === slideIndex ? '#2563eb' : theme.mode === 'dark' ? 'rgba(255,255,255,0.14)' : '#cbd5e1', transition: theme.transition }} />
+              <div key={index} style={{ width: index === slideIndex ? 24 : 8, height: 8, borderRadius: 999, background: index === slideIndex ? '#2563eb' : theme.mode === 'dark' ? 'rgba(255,255,255,0.14)' : '#cbd5e1', transition: theme.transition, animation: index === slideIndex ? 'stopSoftPulse 380ms ease' : 'none' }} />
             ))}
           </div>
 
-          {renderSlide()}
+          <div style={{ opacity: isAdvancing ? 0.56 : 1, transform: isAdvancing ? 'translateY(8px) scale(0.992)' : 'translateY(0) scale(1)', transition: 'opacity 180ms ease, transform 180ms ease' }}>
+            {renderSlide()}
+          </div>
 
           <section style={{ background: theme.info, borderRadius: 24, padding: 18, color: theme.infoText, lineHeight: 1.55, border: theme.mode === 'dark' ? '1px solid rgba(125,211,252,0.18)' : '1px solid rgba(125,211,252,0.24)', transition: theme.transition }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, marginBottom: 6 }}>
@@ -370,7 +409,11 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
           </section>
 
           <div style={{ display: 'grid', gridTemplateColumns: slideIndex > 0 ? '0.78fr 1fr' : '1fr', gap: 10 }}>
-            {slideIndex > 0 && <button type="button" onClick={() => setSlideIndex((current) => current - 1)} style={{ border: `1px solid ${theme.border}`, borderRadius: 24, padding: '16px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, transition: theme.transition }}>Volver</button>}
+            {slideIndex > 0 && (
+              <button type="button" onClick={() => setSlideIndex((current) => current - 1)} style={{ border: `1px solid ${theme.border}`, borderRadius: 24, padding: '16px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, transition: theme.transition }}>
+                Volver
+              </button>
+            )}
             <button type="submit" disabled={!canContinue} style={{ border: 'none', borderRadius: 24, padding: '16px 18px', background: canContinue ? 'linear-gradient(145deg, #0f172a 0%, #1d4ed8 100%)' : '#94a3b8', color: '#fff', fontSize: 16, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: canContinue ? '0 20px 45px rgba(29,78,216,0.22)' : 'none', transition: theme.transition }}>
               {slideIndex === slides.length - 1 ? 'Continuar al screening' : 'Seguir'}
               <ArrowRight size={18} />

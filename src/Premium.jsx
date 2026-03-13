@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { ArrowLeft, Bot, CalendarClock, Gem, LockKeyhole, ShieldCheck, Sparkles, Star, TrendingUp } from 'lucide-react'
 import BottomNav from './BottomNav.jsx'
 import ThemeToggle from './ThemeToggle.jsx'

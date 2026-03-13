@@ -142,14 +142,14 @@ export default function Education({ profile, currentScreen = 'education', onNavi
         </div>
 
         <div style={{ marginBottom: 20 }}>
-          <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: 1.1, color: theme.subtle, marginBottom: 8 }}>EDUCACIÃ“N</div>
+          <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: 1.1, color: theme.subtle, marginBottom: 8 }}>EDUCACIÓN</div>
           <h1 style={{ margin: 0, fontSize: 32, lineHeight: 1.05, color: theme.text }}>Biblioteca anti-apuestas</h1>
-          <p style={{ margin: '12px 0 0', color: theme.muted, lineHeight: 1.55 }}>Lecturas breves, historias reales y explicaciones claras para entender mejor el patrÃ³n antes de que vuelva a arrastrarte.</p>
+          <p style={{ margin: '12px 0 0', color: theme.muted, lineHeight: 1.55 }}>Lecturas breves, historias reales y explicaciones claras para entender mejor el patrón antes de que vuelva a arrastrarte.</p>
         </div>
 
-        <section style={{ background: theme.surface, borderRadius: 24, padding: 10, border: `1px solid ${theme.border}`, boxShadow: theme.shadow, marginBottom: 18, transition: theme.transition }}>
+        <section style={{ background: theme.segmentedSurface, borderRadius: 24, padding: 10, border: `1px solid ${theme.border}`, boxShadow: theme.shadow, marginBottom: 18, transition: theme.transition }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-            <TabButton active={activeTab === 'articles'} label="ArtÃ­culos" onClick={() => setActiveTab('articles')} theme={theme} />
+            <TabButton active={activeTab === 'articles'} label="Artículos" onClick={() => setActiveTab('articles')} theme={theme} />
             <TabButton active={activeTab === 'stories'} label="Historias" onClick={() => setActiveTab('stories')} theme={theme} />
           </div>
         </section>
@@ -177,7 +177,7 @@ export default function Education({ profile, currentScreen = 'education', onNavi
 
             <section style={{ background: theme.surface, borderRadius: 24, padding: '16px 18px', boxShadow: theme.shadow, marginBottom: 18, border: `1px solid ${theme.border}`, transition: theme.transition }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}><Sparkles size={18} color={theme.mode === 'dark' ? '#93c5fd' : '#1d4ed8'} /><div style={{ fontWeight: 800, color: theme.text }}>Tu foco actual</div></div>
-              <div style={{ color: theme.muted, lineHeight: 1.6 }}>Hoy sabemos que tu riesgo se activa mucho con {profile.sportFocus} y con {profile.mainTrigger}. Por eso esta biblioteca mezcla claridad, recaÃ­da, costo real y momentos gatillo.</div>
+              <div style={{ color: theme.muted, lineHeight: 1.6 }}>Hoy sabemos que tu riesgo se activa mucho con {profile.sportFocus} y con {profile.mainTrigger}. Por eso esta biblioteca mezcla claridad, recaída, costo real y momentos gatillo.</div>
             </section>
 
             <div style={{ display: 'grid', gap: 12, marginBottom: 18 }}>
@@ -189,21 +189,21 @@ export default function Education({ profile, currentScreen = 'education', onNavi
                   </div>
                   <div style={{ fontSize: 20, fontWeight: 800, lineHeight: 1.15, color: theme.text, marginBottom: 8 }}>{article.title}</div>
                   <div style={{ color: theme.muted, lineHeight: 1.6, marginBottom: 14 }}>{article.subtitle}</div>
-                  <div style={{ color: theme.text, fontWeight: 800, fontSize: 13 }}>Leer artÃ­culo</div>
+                  <div style={{ color: theme.text, fontWeight: 800, fontSize: 13 }}>Leer artículo</div>
                 </button>
               ))}
             </div>
 
             <section style={{ background: theme.info, borderRadius: 24, padding: 20, color: theme.infoText, lineHeight: 1.6, marginBottom: 18, transition: theme.transition }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, fontWeight: 800 }}><TriangleAlert size={18} />TraducciÃ³n a tu caso</div>
-              Si cada dÃ­a se te iban {profile.hoursLostPerDay} horas en promedio y {profile.averageSpend} CLP, no era solo un mal rato. Era una fuga diaria de tiempo, energÃ­a y dinero que podÃ­a seguir creciendo sola.
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, fontWeight: 800 }}><TriangleAlert size={18} />Traducción a tu caso</div>
+              Si cada día se te iban {profile.hoursLostPerDay} horas en promedio y {profile.averageSpend} CLP, no era solo un mal rato. Era una fuga diaria de tiempo, energía y dinero que podía seguir creciendo sola.
             </section>
           </>
         ) : (
           <>
             <section style={{ background: theme.surface, borderRadius: 24, padding: '16px 18px', boxShadow: theme.shadow, marginBottom: 18, border: `1px solid ${theme.border}`, transition: theme.transition }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}><Quote size={18} color={theme.mode === 'dark' ? '#fdba74' : '#b45309'} /><div style={{ fontWeight: 800, color: theme.text }}>Historias y testimonios</div></div>
-              <div style={{ color: theme.muted, lineHeight: 1.6 }}>Leer historias reales puede ayudarte a ponerle nombre a cosas que todavÃ­a se sienten confusas o difÃ­ciles de contar.</div>
+              <div style={{ color: theme.muted, lineHeight: 1.6 }}>Leer historias reales puede ayudarte a ponerle nombre a cosas que todavía se sienten confusas o difíciles de contar.</div>
             </section>
             <div style={{ display: 'grid', gap: 12, marginBottom: 18 }}>
               {educationStories.map((story) => <StoryCard key={story.slug} story={story} onOpen={setSelectedStorySlug} theme={theme} />)}
@@ -211,8 +211,12 @@ export default function Education({ profile, currentScreen = 'education', onNavi
           </>
         )}
 
-        <button type="button" onClick={onOpenPremium} style={{ width: '100%', border: 'none', borderRadius: 22, padding: '16px 18px', background: 'linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%)', color: '#fff', fontSize: 16, fontWeight: 800, boxShadow: '0 20px 45px rgba(29,78,216,0.25)', marginBottom: 12, transition: theme.transition }}>Ver cÃ³mo Premium profundiza esto</button>
-        <button type="button" onClick={onBack} style={{ width: '100%', border: `1px solid ${theme.border}`, borderRadius: 22, padding: '15px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, transition: theme.transition }}>Volver a Home</button>
+        <button type="button" onClick={onOpenPremium} style={{ width: '100%', border: 'none', borderRadius: 22, padding: '16px 18px', background: 'linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%)', color: '#fff', fontSize: 16, fontWeight: 800, boxShadow: '0 20px 45px rgba(29,78,216,0.25)', marginBottom: 12, transition: theme.transition }}>
+          Ver cómo Premium profundiza esto
+        </button>
+        <button type="button" onClick={onBack} style={{ width: '100%', border: `1px solid ${theme.border}`, borderRadius: 22, padding: '15px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, transition: theme.transition }}>
+          Volver a Home
+        </button>
       </div>
 
       <BottomNav current={currentScreen} onNavigate={onNavigate} theme={theme} />

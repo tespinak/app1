@@ -1,4 +1,4 @@
-﻿export const THEME_STORAGE_KEY = 'stop_theme_mode'
+export const THEME_STORAGE_KEY = 'stop_theme_mode'
 
 export function loadThemeMode() {
   if (typeof window === 'undefined') return 'light'

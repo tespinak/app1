@@ -1,4 +1,4 @@
-﻿import { BookOpen, Crown, House, MessageCircleHeart, SquarePen } from 'lucide-react'
+import { BookOpen, Crown, House, MessageCircleHeart, SquarePen } from 'lucide-react'
 
 const items = [
   { key: 'home', label: 'Inicio', icon: House },
