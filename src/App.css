@@ -9,13 +9,21 @@
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  transition: background 280ms ease, color 280ms ease;
 }
 
 button,
 input,
 textarea {
   font: inherit;
+  transition: background 280ms ease, color 280ms ease, border-color 280ms ease, box-shadow 280ms ease, transform 280ms ease, opacity 280ms ease;
 }

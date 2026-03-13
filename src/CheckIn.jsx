@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight, NotebookPen, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { hasCheckedInToday } from './storage.js'
+import BottomNav from './BottomNav.jsx'
 import ThemeToggle from './ThemeToggle.jsx'
 import { getTheme } from './theme.js'
 
@@ -10,14 +11,14 @@ const intensityOptions = [
   { value: 8, label: 'Alto', text: 'Hoy costó mucho sostenerte.' },
 ]
 
-export default function CheckIn({ profile, onBack, onSubmit, themeMode, onToggleTheme }) {
+export default function CheckIn({ profile, currentScreen = 'checkin', onNavigate, onBack, onSubmit, themeMode, onToggleTheme }) {
   const theme = getTheme(themeMode)
   const [intensity, setIntensity] = useState(profile.impulseWeek[profile.impulseWeek.length - 1])
   const [note, setNote] = useState(profile.todayNote || '')
   const checkedIn = hasCheckedInToday(profile)
 
   return (
-    <div style={{ minHeight: '100vh', padding: '28px 20px 40px', background: theme.canvas }}>
+    <div style={{ minHeight: '100vh', padding: '28px 20px 112px', background: theme.canvas, transition: theme.transition }}>
       <div style={{ maxWidth: 460, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
           <button type="button" onClick={onBack} style={{ border: `1px solid ${theme.border}`, background: theme.surface, backdropFilter: 'blur(14px)', color: theme.text, borderRadius: 999, padding: '10px 14px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -52,11 +53,13 @@ export default function CheckIn({ profile, onBack, onSubmit, themeMode, onToggle
           <textarea value={note} onChange={(event) => setNote(event.target.value)} rows={5} placeholder="Ej: me gatilló ver cuotas en NBA, pero logré no entrar a apostar" style={{ width: '100%', border: `1px solid ${theme.border}`, borderRadius: 16, padding: '14px 16px', resize: 'vertical', background: theme.input, color: theme.text, fontFamily: 'inherit' }} />
         </section>
 
-        <button type="button" onClick={() => onSubmit(intensity, note)} style={{ width: '100%', border: 'none', borderRadius: 24, padding: '16px 18px', background: 'linear-gradient(145deg, #0f172a 0%, #1d4ed8 100%)', color: '#fff', fontSize: 16, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: '0 20px 45px rgba(29,78,216,0.20)' }}>
+        <button type="button" onClick={() => onSubmit(intensity, note)} style={{ width: '100%', border: 'none', borderRadius: 24, padding: '16px 18px', background: 'linear-gradient(145deg, #0f172a 0%, #1d4ed8 100%)', color: '#fff', fontSize: 16, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: '0 20px 45px rgba(29,78,216,0.20)', transition: theme.transition }}>
           Guardar check-in de hoy
           <ArrowRight size={18} />
         </button>
       </div>
+
+      <BottomNav current={currentScreen} onNavigate={onNavigate} theme={theme} />
     </div>
   )
 }

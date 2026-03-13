@@ -80,7 +80,7 @@ export function buildFallbackReply(profile, message) {
   }
 
   if (intent === 'calm') {
-    return `Cuando aparezca ese ruido, vuelve a tu razón: ${profile.reason} Usa el botón rojo, respira 90 segundos y corta el contacto con ${profile.mainTrigger}.`
+    return `Cuando aparezca ese ruido, vuelve a tu razón: ${profile.reason}. Usa el botón rojo, respira 90 segundos y corta el contacto con ${profile.mainTrigger}.`
   }
 
   return `Te leo. Lo importante ahora es volver a tu norte: recuperar ${profile.goal.toLowerCase()}. No necesitas resolver toda tu vida hoy, solo dar un paso pequeño y concreto que te aleje del impulso.`

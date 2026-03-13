@@ -1,4 +1,4 @@
-﻿export const STORAGE_KEY = 'stop_profile_v1'
+export const STORAGE_KEY = 'stop_profile_v1'
 
 function getTodayLabel() {
   const date = new Date()
@@ -31,6 +31,9 @@ export const defaultProfile = {
   impulseWeek: [7, 6, 5, 6, 4, 3, 2],
   milestoneCount: 8,
   sportFocus: 'NBA y tenis',
+  bettingType: 'Apuestas deportivas',
+  teamFocus: '',
+  incitement: [],
   lastCheckInDate: '',
   todayNote: '',
   checkInHistory: [],

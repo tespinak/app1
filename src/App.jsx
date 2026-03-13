@@ -7,7 +7,7 @@ import Home from './Home.jsx'
 import Onboarding from './Onboarding.jsx'
 import Premium from './Premium.jsx'
 import { applyDailyCheckIn, defaultProfile, loadProfile, saveProfile } from './storage.js'
-import { loadThemeMode, saveThemeMode, getTheme } from './theme.js'
+import { getTheme, loadThemeMode, saveThemeMode } from './theme.js'
 
 function App() {
   const [profile, setProfile] = useState(defaultProfile)
@@ -31,8 +31,12 @@ function App() {
 
   useEffect(() => {
     const theme = getTheme(themeMode)
-    document.body.style.background = theme.mode === 'dark' ? '#020617' : '#eef4ff'
+    document.body.style.background = theme.mode === 'dark' ? '#020617' : '#f4f8ff'
     document.body.style.color = theme.text
+    document.body.style.transition = theme.transition
+    document.documentElement.style.background = theme.mode === 'dark' ? '#020617' : '#f4f8ff'
+    document.documentElement.style.color = theme.text
+    document.documentElement.style.transition = theme.transition
   }, [themeMode])
 
   const toggleTheme = () => {
@@ -74,24 +78,26 @@ function App() {
   }
 
   if (screen === 'education') {
-    return <Education profile={profile} onBack={() => setScreen('home')} onOpenPremium={() => setScreen('premium')} themeMode={themeMode} onToggleTheme={toggleTheme} />
+    return <Education profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onOpenPremium={() => setScreen('premium')} themeMode={themeMode} onToggleTheme={toggleTheme} />
   }
 
   if (screen === 'premium') {
-    return <Premium profile={profile} onBack={() => setScreen('home')} onOpenEducation={() => setScreen('education')} themeMode={themeMode} onToggleTheme={toggleTheme} />
+    return <Premium profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onOpenEducation={() => setScreen('education')} themeMode={themeMode} onToggleTheme={toggleTheme} />
   }
 
   if (screen === 'assistant') {
-    return <Assistant profile={profile} onBack={() => setScreen('home')} onOpenCheckIn={() => setScreen('checkin')} themeMode={themeMode} onToggleTheme={toggleTheme} />
+    return <Assistant profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onOpenCheckIn={() => setScreen('checkin')} themeMode={themeMode} onToggleTheme={toggleTheme} />
   }
 
   if (screen === 'checkin') {
-    return <CheckIn profile={profile} onBack={() => setScreen('home')} onSubmit={handleDailyCheckIn} themeMode={themeMode} onToggleTheme={toggleTheme} />
+    return <CheckIn profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onSubmit={handleDailyCheckIn} themeMode={themeMode} onToggleTheme={toggleTheme} />
   }
 
   return (
     <Home
       profile={profile}
+      currentScreen={screen}
+      onNavigate={setScreen}
       themeMode={themeMode}
       onToggleTheme={toggleTheme}
       onRestartOnboarding={() => setStep('onboarding')}
