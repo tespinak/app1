@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import Assistant from './Assistant.jsx'
 import CheckIn from './CheckIn.jsx'
 import Diagnostic from './Diagnostic.jsx'
 import Education from './Education.jsx'
 import Home from './Home.jsx'
 import Onboarding from './Onboarding.jsx'
+import PersonalizedPlan from './PersonalizedPlan.jsx'
 import Premium from './Premium.jsx'
+import Protection from './Protection.jsx'
+import Settings from './Settings.jsx'
 import { applyDailyCheckIn, defaultProfile, loadProfile, saveProfile } from './storage.js'
 import { getTheme, loadThemeMode, saveThemeMode } from './theme.js'
 
@@ -52,10 +55,21 @@ function App() {
     setStep('diagnostic')
   }
 
-  const handleDiagnosticComplete = (partialProfile) => {
+  const persistDiagnostic = (partialProfile) => {
     const nextProfile = { ...profile, ...partialProfile }
     setProfile(nextProfile)
     saveProfile(nextProfile)
+    return nextProfile
+  }
+
+  const handleDiagnosticContinue = (partialProfile) => {
+    persistDiagnostic(partialProfile)
+    setStep('plan')
+    setScreen('home')
+  }
+
+  const handleDiagnosticOpenPremium = (partialProfile) => {
+    persistDiagnostic(partialProfile)
     setStep('post-diagnostic-offer')
   }
 
@@ -74,11 +88,18 @@ function App() {
   if (step === 'loading') return null
 
   if (step === 'onboarding') {
-    return <Onboarding initialProfile={profile} onContinue={handleOnboardingComplete} themeMode={themeMode} onToggleTheme={toggleTheme} />
+    return <Onboarding initialProfile={profile} onContinue={handleOnboardingComplete} themeMode={themeMode} />
   }
 
   if (step === 'diagnostic') {
-    return <Diagnostic initialProfile={profile} onContinue={handleDiagnosticComplete} themeMode={themeMode} onToggleTheme={toggleTheme} />
+    return (
+      <Diagnostic
+        initialProfile={profile}
+        onContinue={handleDiagnosticContinue}
+        onOpenPremium={handleDiagnosticOpenPremium}
+        themeMode={themeMode}
+      />
+    )
   }
 
   if (step === 'post-diagnostic-offer') {
@@ -87,30 +108,51 @@ function App() {
         profile={profile}
         currentScreen="premium"
         onNavigate={setScreen}
-        onBack={handleEnterHome}
+        onBack={() => setStep('plan')}
         onOpenEducation={() => setScreen('education')}
-        onContinueCurrent={handleEnterHome}
+        onOpenProtection={() => setScreen('protection')}
+        onContinueCurrent={() => setStep('plan')}
         context="post-diagnostic"
         themeMode={themeMode}
-        onToggleTheme={toggleTheme}
+      />
+    )
+  }
+
+  if (step === 'plan') {
+    return (
+      <PersonalizedPlan
+        profile={profile}
+        currentScreen="home"
+        onNavigate={setScreen}
+        onBack={handleEnterHome}
+        onOpenPremium={() => setStep('post-diagnostic-offer')}
+        themeMode={themeMode}
       />
     )
   }
 
   if (screen === 'education') {
-    return <Education profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onOpenPremium={() => setScreen('premium')} themeMode={themeMode} onToggleTheme={toggleTheme} />
+    return <Education profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onOpenPremium={() => setScreen('premium')} themeMode={themeMode} />
   }
 
   if (screen === 'premium') {
-    return <Premium profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onOpenEducation={() => setScreen('education')} themeMode={themeMode} onToggleTheme={toggleTheme} />
+    return <Premium profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onOpenEducation={() => setScreen('education')} onOpenProtection={() => setScreen('protection')} themeMode={themeMode} />
+  }
+
+  if (screen === 'protection') {
+    return <Protection profile={profile} currentScreen="premium" onNavigate={setScreen} onBack={() => setScreen('premium')} themeMode={themeMode} />
   }
 
   if (screen === 'assistant') {
-    return <Assistant profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onOpenCheckIn={() => setScreen('checkin')} themeMode={themeMode} onToggleTheme={toggleTheme} />
+    return <Assistant profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onOpenCheckIn={() => setScreen('checkin')} themeMode={themeMode} />
   }
 
   if (screen === 'checkin') {
-    return <CheckIn profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onSubmit={handleDailyCheckIn} themeMode={themeMode} onToggleTheme={toggleTheme} />
+    return <CheckIn profile={profile} currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} onSubmit={handleDailyCheckIn} themeMode={themeMode} />
+  }
+
+  if (screen === 'settings') {
+    return <Settings currentScreen={screen} onNavigate={setScreen} onBack={() => setScreen('home')} themeMode={themeMode} onToggleTheme={toggleTheme} onRestartOnboarding={() => setStep('onboarding')} />
   }
 
   return (
@@ -119,12 +161,12 @@ function App() {
       currentScreen={screen}
       onNavigate={setScreen}
       themeMode={themeMode}
-      onToggleTheme={toggleTheme}
       onRestartOnboarding={() => setStep('onboarding')}
       onOpenEducation={() => setScreen('education')}
       onOpenPremium={() => setScreen('premium')}
       onOpenAssistant={() => setScreen('assistant')}
       onOpenCheckIn={() => setScreen('checkin')}
+      onOpenSettings={() => setScreen('settings')}
     />
   )
 }

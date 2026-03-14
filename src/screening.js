@@ -29,10 +29,10 @@ export function getPgsiResult(score) {
 
   if (score <= 2) {
     return {
-      band: 'riesgo bajo',
+      band: 'riesgo inicial',
       level: 'temprano',
       color: '#0f766e',
-      copy: 'Ya hay se\u00f1ales iniciales. Cortarlo ahora puede evitar que esto tome mucho m\u00e1s espacio.',
+      copy: 'Ya hay se\u00f1ales iniciales. Este es un buen momento para poner l\u00edmites antes de que el patr\u00f3n tome m\u00e1s espacio.',
     }
   }
 
@@ -41,14 +41,23 @@ export function getPgsiResult(score) {
       band: 'riesgo moderado',
       level: 'moderado',
       color: '#b45309',
-      copy: 'El juego ya est\u00e1 generando desgaste real. Vale la pena activar fricci\u00f3n, seguimiento y apoyo desde ahora.',
+      copy: 'El juego ya est\u00e1 generando desgaste real. Vale la pena activar seguimiento y m\u00e1s estructura desde ahora.',
+    }
+  }
+
+  if (score <= 15) {
+    return {
+      band: 'riesgo alto',
+      level: 'alto',
+      color: '#dc2626',
+      copy: 'El patr\u00f3n ya est\u00e1 pegando fuerte en tu energ\u00eda, tu dinero o tu tranquilidad. Necesitas m\u00e1s barreras y m\u00e1s apoyo.',
     }
   }
 
   return {
-    band: 'riesgo alto',
+    band: 'riesgo muy alto',
     level: 'alto',
     color: '#b91c1c',
-    copy: 'Este screening sugiere un nivel de riesgo alto. Necesitas m\u00e1s barreras, apoyo y una estrategia concreta para cortar el patr\u00f3n.',
+    copy: 'Este screening muestra una se\u00f1al de riesgo muy alta. Conviene intervenir con seriedad y sumar apoyo sostenido cuanto antes.',
   }
 }

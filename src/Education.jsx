@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react'
 import { ArrowLeft, BookOpen, Clock3, Flame, Quote, Sparkles, Star, TriangleAlert } from 'lucide-react'
 import BottomNav from './BottomNav.jsx'
 import { educationArticles, educationStories } from './educationContent.js'
-import ThemeToggle from './ThemeToggle.jsx'
 import { getTheme } from './theme.js'
 
 function StoryCard({ story, onOpen, theme }) {
@@ -50,7 +49,7 @@ function TabButton({ active, label, onClick, theme }) {
   )
 }
 
-export default function Education({ profile, currentScreen = 'education', onNavigate, onBack, onOpenPremium, themeMode, onToggleTheme }) {
+export default function Education({ profile, currentScreen = 'education', onNavigate, onBack, onOpenPremium, themeMode }) {
   const theme = getTheme(themeMode)
   const [selectedSlug, setSelectedSlug] = useState(null)
   const [selectedStorySlug, setSelectedStorySlug] = useState(null)
@@ -72,7 +71,6 @@ export default function Education({ profile, currentScreen = 'education', onNavi
               <ArrowLeft size={14} />
               Volver a la biblioteca
             </button>
-            <ThemeToggle mode={themeMode} onToggle={onToggleTheme} />
           </div>
 
           <article style={{ background: theme.surface, borderRadius: 32, padding: '26px 22px', boxShadow: theme.shadow, marginBottom: 18, border: `1px solid ${theme.border}`, transition: theme.transition }}>
@@ -132,20 +130,50 @@ export default function Education({ profile, currentScreen = 'education', onNavi
 
   return (
     <div style={{ minHeight: '100vh', padding: '28px 20px 112px', background: theme.canvas, transition: theme.transition }}>
+      <style>{`@keyframes stopFadeUp { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: translateY(0); } }`}</style>
       <div style={{ maxWidth: 460, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
           <button type="button" onClick={onBack} style={{ border: `1px solid ${theme.border}`, background: theme.surface, color: theme.text, borderRadius: 999, padding: '10px 14px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: 8, transition: theme.transition }}>
             <ArrowLeft size={14} />
             Volver
           </button>
-          <ThemeToggle mode={themeMode} onToggle={onToggleTheme} />
         </div>
 
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: 1.1, color: theme.subtle, marginBottom: 8 }}>EDUCACIÓN</div>
-          <h1 style={{ margin: 0, fontSize: 32, lineHeight: 1.05, color: theme.text }}>Biblioteca anti-apuestas</h1>
-          <p style={{ margin: '12px 0 0', color: theme.muted, lineHeight: 1.55 }}>Lecturas breves, historias reales y explicaciones claras para entender mejor el patrón antes de que vuelva a arrastrarte.</p>
-        </div>
+        <section style={{ position: 'relative', overflow: 'hidden', background: theme.hero, color: '#fff', borderRadius: 32, padding: 22, boxShadow: theme.shadow, marginBottom: 18, animation: 'stopFadeUp 260ms ease' }}>
+          <div style={{ position: 'absolute', top: -36, right: -12, width: 150, height: 150, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 72%)' }} />
+          <div style={{ position: 'relative' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.10)', borderRadius: 999, padding: '8px 12px', fontWeight: 800, marginBottom: 12 }}>
+              <BookOpen size={16} color="#93c5fd" />
+              Biblioteca de apoyo
+            </div>
+            <h1 style={{ margin: 0, fontSize: 32, lineHeight: 1.03 }}>Lecturas breves y claras para entender mejor lo que te pasa.</h1>
+            <p style={{ margin: '12px 0 14px', color: '#dbeafe', lineHeight: 1.65 }}>
+              Lecturas breves y claras para entender mejor lo que te pasa y sentirte más acompañado en este proceso.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10 }}>
+              {[
+                ['CLARIDAD', 'Más orden'],
+                ['HISTORIAS', 'Más cercanía'],
+                ['TIEMPO', '1-5 min'],
+              ].map(([label, value]) => (
+                <div key={label} style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 18, padding: '12px 10px' }}>
+                  <div style={{ color: '#bfdbfe', fontSize: 10, fontWeight: 900, letterSpacing: 0.5, marginBottom: 6 }}>{label}</div>
+                  <div style={{ color: '#fff', fontSize: 14, fontWeight: 800, lineHeight: 1.2 }}>{value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ background: theme.mode === 'dark' ? 'rgba(15,23,42,0.82)' : '#ffffff', borderRadius: 24, padding: 18, boxShadow: theme.shadow, marginBottom: 18, border: `1px solid ${theme.border}`, transition: theme.transition }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+            <TriangleAlert size={18} color="#2563eb" />
+            <div style={{ fontWeight: 800, color: theme.text }}>Tu foco actual</div>
+          </div>
+          <div style={{ color: theme.muted, lineHeight: 1.6 }}>
+            Sabemos que hay momentos y situaciones que hoy te cuestan más. Esta biblioteca busca ayudarte a entenderlos mejor y enfrentarlos con más claridad.
+          </div>
+        </section>
 
         <section style={{ background: theme.segmentedSurface, borderRadius: 24, padding: 10, border: `1px solid ${theme.border}`, boxShadow: theme.shadow, marginBottom: 18, transition: theme.transition }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -162,7 +190,7 @@ export default function Education({ profile, currentScreen = 'education', onNavi
               <div style={{ background: theme.surface, borderRadius: 20, padding: 14, boxShadow: theme.shadow, border: `1px solid ${theme.border}`, transition: theme.transition }}><div style={{ fontSize: 24, fontWeight: 900, color: theme.text }}>1-5</div><div style={{ color: theme.subtle, fontSize: 12, fontWeight: 800 }}>min lectura</div></div>
             </section>
 
-            <button type="button" onClick={() => setSelectedSlug(featuredArticle.slug)} style={{ width: '100%', border: 'none', background: theme.hero, color: '#fff', borderRadius: 28, padding: 22, boxShadow: theme.shadow, marginBottom: 18, textAlign: 'left', transition: theme.transition }}>
+            <button type="button" onClick={() => setSelectedSlug(featuredArticle.slug)} style={{ width: '100%', border: 'none', background: theme.hero, color: '#fff', borderRadius: 30, padding: 22, boxShadow: theme.shadow, marginBottom: 18, textAlign: 'left', transition: theme.transition, animation: 'stopFadeUp 320ms ease' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '7px 10px', borderRadius: 999, background: 'rgba(255,255,255,0.10)', color: '#93c5fd', fontWeight: 800, fontSize: 12, marginBottom: 14 }}>
                 <Star size={14} />
                 Lectura destacada
@@ -174,11 +202,6 @@ export default function Education({ profile, currentScreen = 'education', onNavi
                 <div style={{ color: '#fff', fontWeight: 900, fontSize: 13 }}>Leer ahora</div>
               </div>
             </button>
-
-            <section style={{ background: theme.surface, borderRadius: 24, padding: '16px 18px', boxShadow: theme.shadow, marginBottom: 18, border: `1px solid ${theme.border}`, transition: theme.transition }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}><Sparkles size={18} color={theme.mode === 'dark' ? '#93c5fd' : '#1d4ed8'} /><div style={{ fontWeight: 800, color: theme.text }}>Tu foco actual</div></div>
-              <div style={{ color: theme.muted, lineHeight: 1.6 }}>Hoy sabemos que tu riesgo se activa mucho con {profile.sportFocus} y con {profile.mainTrigger}. Por eso esta biblioteca mezcla claridad, recaída, costo real y momentos gatillo.</div>
-            </section>
 
             <div style={{ display: 'grid', gap: 12, marginBottom: 18 }}>
               {educationArticles.map((article, index) => (
@@ -193,17 +216,12 @@ export default function Education({ profile, currentScreen = 'education', onNavi
                 </button>
               ))}
             </div>
-
-            <section style={{ background: theme.info, borderRadius: 24, padding: 20, color: theme.infoText, lineHeight: 1.6, marginBottom: 18, transition: theme.transition }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, fontWeight: 800 }}><TriangleAlert size={18} />Traducción a tu caso</div>
-              Si cada día se te iban {profile.hoursLostPerDay} horas en promedio y {profile.averageSpend} CLP, no era solo un mal rato. Era una fuga diaria de tiempo, energía y dinero que podía seguir creciendo sola.
-            </section>
           </>
         ) : (
           <>
             <section style={{ background: theme.surface, borderRadius: 24, padding: '16px 18px', boxShadow: theme.shadow, marginBottom: 18, border: `1px solid ${theme.border}`, transition: theme.transition }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}><Quote size={18} color={theme.mode === 'dark' ? '#fdba74' : '#b45309'} /><div style={{ fontWeight: 800, color: theme.text }}>Historias y testimonios</div></div>
-              <div style={{ color: theme.muted, lineHeight: 1.6 }}>Leer historias reales puede ayudarte a ponerle nombre a cosas que todavía se sienten confusas o difíciles de contar.</div>
+              <div style={{ color: theme.muted, lineHeight: 1.6 }}>Leer historias reales puede ayudarte a entender mejor lo que te pasa y sentirte más acompañado en este proceso.</div>
             </section>
             <div style={{ display: 'grid', gap: 12, marginBottom: 18 }}>
               {educationStories.map((story) => <StoryCard key={story.slug} story={story} onOpen={setSelectedStorySlug} theme={theme} />)}
@@ -212,10 +230,10 @@ export default function Education({ profile, currentScreen = 'education', onNavi
         )}
 
         <button type="button" onClick={onOpenPremium} style={{ width: '100%', border: 'none', borderRadius: 22, padding: '16px 18px', background: 'linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%)', color: '#fff', fontSize: 16, fontWeight: 800, boxShadow: '0 20px 45px rgba(29,78,216,0.25)', marginBottom: 12, transition: theme.transition }}>
-          Ver cómo Premium profundiza esto
+          Ver cómo STOP PRO suma más apoyo
         </button>
         <button type="button" onClick={onBack} style={{ width: '100%', border: `1px solid ${theme.border}`, borderRadius: 22, padding: '15px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, transition: theme.transition }}>
-          Volver a Home
+          Volver a inicio
         </button>
       </div>
 

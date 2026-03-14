@@ -1,8 +1,7 @@
-import { ArrowLeft, Bot, HeartHandshake, MessageSquareHeart, SendHorizonal, ShieldCheck, Sparkles } from 'lucide-react'
+import { ArrowLeft, Bot, SendHorizonal, Sparkles } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { buildFallbackReply, requestAssistantReply } from './assistantService.js'
 import BottomNav from './BottomNav.jsx'
-import ThemeToggle from './ThemeToggle.jsx'
 import { getTheme } from './theme.js'
 
 const quickPrompts = [
@@ -15,32 +14,30 @@ const quickPrompts = [
 
 function buildInitialMessages(profile) {
   const messages = [
-    { role: 'assistant', text: `No soy terapeuta ni reemplazo ayuda profesional, pero sí puedo acompañarte y ayudarte a ordenar este momento, ${profile.name}.` },
-    { role: 'assistant', text: `Tu foco hoy es recuperar ${profile.goal.toLowerCase()} y tener más claridad cuando te gatilla ${profile.mainTrigger}.` },
+    {
+      role: 'assistant',
+      text: `Estoy aquí para ayudarte a ordenar este momento, ${profile.name}.`,
+    },
+    {
+      role: 'assistant',
+      text: `Puedo ayudarte a bajar el impulso, recordar por qué empezaste y dar un paso más claro.`,
+    },
   ]
 
   if (profile.todayNote) {
     messages.push({ role: 'user', text: profile.todayNote })
-    messages.push({ role: 'assistant', text: 'Tomo esa nota como contexto del día. Voy a responderte considerando lo que pasó hoy, tu razón personal y tu foco actual.' })
+    messages.push({
+      role: 'assistant',
+      text: 'Tomo eso como contexto de hoy para responderte mejor.',
+    })
   }
 
   return messages
 }
 
-function FeatureCard({ title, text, theme, tone = 'neutral' }) {
-  const background = tone === 'good' ? (theme.mode === 'dark' ? 'rgba(16,185,129,0.14)' : '#ecfdf5') : tone === 'limit' ? (theme.mode === 'dark' ? 'rgba(245,158,11,0.14)' : '#fffbeb') : theme.mode === 'dark' ? '#0f172a' : '#f8fafc'
-  const color = tone === 'good' ? '#047857' : tone === 'limit' ? '#b45309' : theme.text
-
-  return (
-    <div style={{ borderRadius: 20, padding: 14, background, border: `1px solid ${theme.border}` }}>
-      <div style={{ fontWeight: 800, color, marginBottom: 6 }}>{title}</div>
-      <div style={{ color: theme.muted, lineHeight: 1.5, fontSize: 13 }}>{text}</div>
-    </div>
-  )
-}
-
-export default function Assistant({ profile, currentScreen = 'assistant', onNavigate, onBack, onOpenCheckIn, themeMode, onToggleTheme }) {
+export default function Assistant({ profile, currentScreen = 'assistant', onNavigate, onBack, themeMode }) {
   const theme = getTheme(themeMode)
+  const border = `1px solid ${theme.mode === 'dark' ? theme.border : (theme.borderStrong || theme.border)}`
   const [messages, setMessages] = useState(() => buildInitialMessages(profile))
   const [draft, setDraft] = useState('')
   const [loading, setLoading] = useState(false)
@@ -48,10 +45,10 @@ export default function Assistant({ profile, currentScreen = 'assistant', onNavi
 
   const helperCopy = useMemo(() => {
     if ((profile.sportFocus || '').toLowerCase().includes('nba') || (profile.sportFocus || '').toLowerCase().includes('tenis')) {
-      return `Puedo ayudarte especialmente cuando se acerquen jornadas sensibles de ${profile.sportFocus}.`
+      return `Puede ayudarte a ordenar mejor lo que sientes cuando se acerquen jornadas sensibles de ${profile.sportFocus}.`
     }
 
-    return 'Puedo ayudarte a bajar el ruido mental, volver a tu razón y sugerir pasos concretos.'
+    return 'Un espacio para ayudarte a ordenar lo que estás sintiendo y dar un paso más claro.'
   }, [profile])
 
   const sendMessage = async (text) => {
@@ -78,72 +75,163 @@ export default function Assistant({ profile, currentScreen = 'assistant', onNavi
 
   return (
     <div style={{ minHeight: '100vh', padding: '28px 20px 112px', background: theme.canvas, transition: theme.transition }}>
+      <style>{`@keyframes stopFadeUp { 0% { opacity: 0; transform: translateY(12px); } 100% { opacity: 1; transform: translateY(0); } }`}</style>
       <div style={{ maxWidth: 460, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
-          <button type="button" onClick={onBack} style={{ border: `1px solid ${theme.border}`, background: theme.surface, backdropFilter: 'blur(14px)', color: theme.text, borderRadius: 999, padding: '10px 14px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <button
+            type="button"
+            onClick={onBack}
+            style={{
+              border,
+              background: theme.surface,
+              color: theme.text,
+              borderRadius: 999,
+              padding: '10px 14px',
+              fontWeight: 800,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              boxShadow: theme.shadow,
+            }}
+          >
             <ArrowLeft size={14} />
             Volver
           </button>
-          <ThemeToggle mode={themeMode} onToggle={onToggleTheme} />
         </div>
 
-        <section style={{ background: theme.hero, color: '#fff', borderRadius: 30, padding: 22, boxShadow: theme.shadow, marginBottom: 18 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 10 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><Bot size={18} color="#93c5fd" /><div style={{ fontWeight: 800 }}>Asistente STOP</div></div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.12)', borderRadius: 999, padding: '7px 10px', color: '#dbeafe', fontSize: 12, fontWeight: 800 }}><Sparkles size={14} />IA activa</div>
+        <section
+          style={{
+            background: theme.surface,
+            borderRadius: 24,
+            padding: 18,
+            boxShadow: theme.shadow,
+            border,
+            marginBottom: 18,
+            animation: 'stopFadeUp 260ms ease',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 8, flexWrap: 'wrap' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+              <Bot size={18} color={theme.mode === 'dark' ? '#93c5fd' : '#1d4ed8'} />
+              <div style={{ fontWeight: 900, color: theme.text }}>Asistente STOP</div>
+            </div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: theme.mode === 'dark' ? 'rgba(37,99,235,0.16)' : '#eff6ff', borderRadius: 999, padding: '7px 10px', color: theme.mode === 'dark' ? '#dbeafe' : '#1d4ed8', fontSize: 12, fontWeight: 800 }}>
+              <Sparkles size={14} />
+              IA activa
+            </div>
           </div>
-          <div style={{ color: '#dbeafe', lineHeight: 1.6, marginBottom: 10 }}>Este espacio funciona como apoyo emocional y reflexivo. Puede ayudarte a ordenar el impulso, recordar tu razón y sugerir pasos concretos. No reemplaza terapia ni atención profesional.</div>
-          <div style={{ color: '#bfdbfe', lineHeight: 1.55, fontSize: 13 }}>{helperCopy}</div>
+          <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 14 }}>{helperCopy}</div>
         </section>
 
-        <section style={{ display: 'grid', gap: 10, marginBottom: 18 }}>
-          <FeatureCard title="Qué sí puede hacer" text="Bajar ansiedad, ayudarte a frenar una recaída, recordarte por qué empezaste y proponerte un paso concreto inmediato." theme={theme} tone="good" />
-          <FeatureCard title="Qué no hace" text="No recomienda apuestas, no da cuotas, no da consejo financiero y no reemplaza apoyo profesional." theme={theme} tone="limit" />
-          <FeatureCard title="Qué contexto usa" text={`Tu razón para cambiar, tu check-in de hoy, tu foco en ${profile.sportFocus || 'juego/apuesta'} y tu nivel de riesgo actual.`} theme={theme} />
-        </section>
-
-        <section style={{ background: theme.surface, backdropFilter: 'blur(16px)', borderRadius: 24, padding: 18, boxShadow: theme.shadow, border: `1px solid ${theme.border}`, marginBottom: 18 }}>
-          <div style={{ fontWeight: 800, color: theme.text, marginBottom: 10 }}>Usos rápidos</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+        <section
+          style={{
+            background: theme.surface,
+            borderRadius: 24,
+            padding: 18,
+            boxShadow: theme.shadow,
+            border,
+            marginBottom: 18,
+            animation: 'stopFadeUp 320ms ease',
+          }}
+        >
+          <div style={{ fontWeight: 900, color: theme.text, marginBottom: 10 }}>Escribe o elige una de estas opciones</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
             {quickPrompts.map((item) => (
-              <button key={item} type="button" onClick={() => sendMessage(item)} style={{ border: 'none', borderRadius: 999, padding: '10px 14px', fontWeight: 800, background: theme.mode === 'dark' ? '#0f172a' : '#e2e8f0', color: theme.text }}>
+              <button
+                key={item}
+                type="button"
+                onClick={() => sendMessage(item)}
+                style={{
+                  border,
+                  borderRadius: 999,
+                  padding: '10px 14px',
+                  fontWeight: 800,
+                  background: theme.mode === 'dark' ? 'rgba(15,23,42,0.82)' : '#f8fafc',
+                  color: theme.text,
+                }}
+              >
                 {item}
               </button>
             ))}
           </div>
+          <textarea
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            rows={4}
+            placeholder="Escríbeme cómo te sientes, qué te gatilló hoy o qué está haciendo ruido..."
+            style={{
+              width: '100%',
+              border,
+              borderRadius: 18,
+              padding: '14px 16px',
+              resize: 'vertical',
+              background: theme.input,
+              color: theme.text,
+              marginBottom: 12,
+              fontFamily: 'inherit',
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => sendMessage(draft)}
+            disabled={loading || !draft.trim()}
+            style={{
+              width: '100%',
+              border: 'none',
+              borderRadius: 22,
+              padding: '14px 16px',
+              background: loading || !draft.trim() ? '#94a3b8' : 'linear-gradient(145deg, #0f172a 0%, #1d4ed8 100%)',
+              color: '#fff',
+              fontWeight: 900,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10,
+              boxShadow: loading || !draft.trim() ? 'none' : '0 20px 45px rgba(29,78,216,0.18)',
+            }}
+          >
+            <SendHorizonal size={16} />
+            {loading ? 'Pensando...' : 'Enviar'}
+          </button>
         </section>
 
-        {status && <div style={{ background: status.includes('Fallback') ? '#fef3c7' : theme.info, color: status.includes('Fallback') ? '#92400e' : theme.infoText, borderRadius: 18, padding: '12px 14px', marginBottom: 14, fontSize: 13, fontWeight: 700 }}>{status}</div>}
+        {status ? (
+          <div
+            style={{
+              background: status.includes('Fallback') ? '#fef3c7' : theme.info,
+              color: status.includes('Fallback') ? '#92400e' : theme.infoText,
+              borderRadius: 18,
+              padding: '12px 14px',
+              marginBottom: 14,
+              fontSize: 13,
+              fontWeight: 700,
+            }}
+          >
+            {status}
+          </div>
+        ) : null}
 
         <div style={{ display: 'grid', gap: 12, marginBottom: 18 }}>
           {messages.map((message, index) => (
-            <div key={`${message.role}-${index}`} style={{ background: message.role === 'assistant' ? theme.surface : theme.mode === 'dark' ? 'rgba(30,64,175,0.32)' : 'rgba(219,234,254,0.92)', backdropFilter: 'blur(14px)', borderRadius: 24, padding: 18, boxShadow: theme.shadow, border: `1px solid ${theme.border}` }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                {message.role === 'assistant' ? <MessageSquareHeart size={16} color={theme.mode === 'dark' ? '#93c5fd' : '#1d4ed8'} /> : <HeartHandshake size={16} color={theme.mode === 'dark' ? '#6ee7b7' : '#0f766e'} />}
-                <div style={{ fontSize: 12, fontWeight: 900, color: theme.subtle }}>{message.role === 'assistant' ? 'APOYO STOP' : 'TU MENSAJE'}</div>
-              </div>
-              <div style={{ color: theme.text, lineHeight: 1.6 }}>{message.text}</div>
+            <div
+              key={`${message.role}-${index}`}
+              style={{
+                background: message.role === 'assistant' ? theme.surface : theme.mode === 'dark' ? 'rgba(30,64,175,0.32)' : 'rgba(219,234,254,0.92)',
+                borderRadius: 24,
+                padding: 16,
+                border,
+                boxShadow: theme.shadow,
+                color: theme.text,
+                lineHeight: 1.6,
+              }}
+            >
+              {message.text}
             </div>
           ))}
         </div>
 
-        <section style={{ background: theme.surface, backdropFilter: 'blur(16px)', borderRadius: 24, padding: 18, boxShadow: theme.shadow, border: `1px solid ${theme.border}`, marginBottom: 18 }}>
-          <textarea value={draft} onChange={(event) => setDraft(event.target.value)} rows={4} placeholder="Escríbeme cómo te sientes, qué te gatilló hoy o qué está haciendo ruido..." style={{ width: '100%', border: `1px solid ${theme.border}`, borderRadius: 18, padding: '14px 16px', resize: 'vertical', background: theme.input, color: theme.text, marginBottom: 12, fontFamily: 'inherit' }} />
-          <button type="button" onClick={() => sendMessage(draft)} disabled={loading || !draft.trim()} style={{ width: '100%', border: 'none', borderRadius: 22, padding: '14px 16px', background: loading || !draft.trim() ? '#94a3b8' : 'linear-gradient(145deg, #0f172a 0%, #1d4ed8 100%)', color: '#fff', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: loading || !draft.trim() ? 'none' : '0 20px 45px rgba(29,78,216,0.18)' }}>
-            <SendHorizonal size={16} />
-            {loading ? 'Pensando...' : 'Enviar al asistente'}
-          </button>
-        </section>
-
-        <section style={{ background: theme.info, borderRadius: 24, padding: 18, color: theme.infoText, lineHeight: 1.55, marginBottom: 18 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, fontWeight: 800 }}><ShieldCheck size={16} />Lo siguiente que podría hacer por ti</div>
-          Si conectamos esto mejor, el asistente podría cruzar tu historial, tu check-in y jornadas sensibles de {profile.sportFocus} para prepararte antes del gatillo.
-        </section>
-
-        <button type="button" onClick={onOpenCheckIn} style={{ width: '100%', border: `1px solid ${theme.border}`, borderRadius: 22, padding: '16px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, transition: theme.transition }}>Hacer check-in y actualizar contexto</button>
+        <BottomNav current={currentScreen} onNavigate={onNavigate} theme={theme} />
       </div>
-
-      <BottomNav current={currentScreen} onNavigate={onNavigate} theme={theme} />
     </div>
   )
 }

@@ -1,6 +1,5 @@
 ﻿import { ArrowRight, Clock3, Coins, ShieldCheck, Sparkles, Target, Trophy, UserRound } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import ThemeToggle from './ThemeToggle.jsx'
 import { getTheme } from './theme.js'
 
 const slides = ['nombre', 'edad', 'dinero', 'tiempo', 'motivo', 'juego', 'impulso', 'foco', 'meta']
@@ -201,7 +200,7 @@ function SlideShell({ theme, icon: Icon, title, subtitle, stepLabel, children })
   )
 }
 
-export default function Onboarding({ initialProfile, onContinue, themeMode, onToggleTheme }) {
+export default function Onboarding({ initialProfile, onContinue, themeMode }) {
   const theme = getTheme(themeMode)
   const [slideIndex, setSlideIndex] = useState(0)
   const [isAdvancing, setIsAdvancing] = useState(false)
@@ -335,7 +334,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     if (currentSlide === 'edad') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 2" icon={Target} title="¿En qué rango de edad estás?" subtitle="Nos ayuda a calibrar mejor el tono y el tipo de mensajes que pueden servirte más.">
+        <SlideShell theme={theme} stepLabel="PREGUNTA 2" icon={Target} title="¿En qué rango de edad estás?" subtitle="Queremos entender mejor tu situación para que STOP se sienta más útil desde el inicio.">
           <div style={{ background: theme.mode === 'dark' ? '#0f172a' : '#eef2ff', borderRadius: 24, padding: 18, transition: theme.transition }}>
             <div style={{ fontSize: 30, fontWeight: 900, color: theme.text, marginBottom: 12 }}>{ageMarks[ageIndex]}</div>
             <input type="range" min="0" max="3" step="1" value={ageIndex} onChange={handleAgeChange} style={{ width: '100%' }} />
@@ -349,7 +348,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     if (currentSlide === 'dinero') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 3" icon={Coins} title="¿Cuánto dinero se te va normalmente en una semana?" subtitle="Esto nos ayuda a estimar el costo real del hábito y mostrar mejor lo que estás recuperando.">
+        <SlideShell theme={theme} stepLabel="PREGUNTA 3" icon={Coins} title="¿Cuánto dinero se te va normalmente en una semana?" subtitle="Esto nos ayuda a entender mejor cuánto está impactando hoy esta situación.">
           <div style={{ display: 'grid', gap: 12 }}>
             {spendRanges.map((option) => (
               <ChoiceCard key={option.label} label={option.label} selected={form.averageSpend === option.value} onClick={() => selectAndAdvance('averageSpend', option.value)} theme={theme} icon={Coins} />
@@ -373,7 +372,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     if (currentSlide === 'motivo') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 5" icon={Target} title="¿Por qué quieres cambiar esta historia?" subtitle="Escribe lo que te hizo decir basta. Esto luego nos ayuda a personalizar mejor el tono del asistente.">
+        <SlideShell theme={theme} stepLabel="PREGUNTA 5" icon={Target} title="¿Por qué quieres cambiar?" subtitle="Queremos entender mejor lo que te pasa para que STOP se sienta más cercano desde el inicio.">
           <textarea value={form.reason} onChange={(event) => update('reason', event.target.value)} placeholder="Ej: me cansé de perder foco, dinero y tranquilidad por estar pendiente del juego" required rows={5} style={{ width: '100%', border: `1px solid ${theme.border}`, borderRadius: 20, padding: '16px 18px', resize: 'vertical', background: theme.input, color: theme.text, fontFamily: 'inherit', fontSize: 15, transition: theme.transition }} />
         </SlideShell>
       )
@@ -389,7 +388,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     if (currentSlide === 'impulso') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 7" icon={Sparkles} title="¿Qué te empuja más a apostar?" subtitle="Puedes elegir hasta 3. Esto nos ayuda a entender si el impulso viene más por ansiedad, adrenalina, aburrimiento o necesidad de recuperar pérdidas.">
+        <SlideShell theme={theme} stepLabel="PREGUNTA 7" icon={Sparkles} title="¿Qué te empuja más a apostar?" subtitle="Puedes elegir hasta 3. Esto nos ayuda a entender mejor lo que te pasa cuando más te cuesta.">
           <MultiSelectGrid items={incitementOptions} selectedValues={form.incitement} onToggle={toggleIncitement} theme={theme} helper="Puedes marcar hasta 3." />
         </SlideShell>
       )
@@ -397,7 +396,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
 
     if (currentSlide === 'foco') {
       return (
-        <SlideShell theme={theme} stepLabel="PREGUNTA 8" icon={Trophy} title="¿En qué deportes o tipos de juego caes más?" subtitle="Puedes elegir varias opciones. En Actual esto sirve para alertas generales; el bloqueo de apps y el seguimiento por páginas quedan para STOP PRO.">
+        <SlideShell theme={theme} stepLabel="PREGUNTA 8" icon={Trophy} title="¿En qué deportes o tipos de juego caes más?" subtitle="Puedes elegir varias opciones. Esto nos ayuda a darte una experiencia más clara y más ajustada a lo que te pasa.">
           <MultiSelectGrid items={focusOptions} selectedValues={form.sportFocus} onToggle={toggleFocus} theme={theme} helper="Puedes marcar hasta 3. Ejemplo: NBA y Fútbol." />
         </SlideShell>
       )
@@ -416,7 +415,6 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
       <div style={{ maxWidth: 460, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
           <div style={{ color: theme.subtle, fontSize: 13, fontWeight: 800 }}>Paso {slideIndex + 1} de {slides.length}</div>
-          <ThemeToggle mode={themeMode} onToggle={onToggleTheme} />
         </div>
 
         <section style={{ position: 'relative', overflow: 'hidden', background: theme.hero, color: '#fff', borderRadius: 34, padding: 24, boxShadow: theme.shadow, marginBottom: 18, transition: theme.transition }}>
@@ -426,8 +424,8 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
             <Sparkles size={16} color="#bfdbfe" />
             STOP
           </div>
-          <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.03 }}>Construyamos tu punto de partida</h1>
-          <p style={{ margin: '12px 0 14px', color: '#dbeafe', lineHeight: 1.6 }}>Una pantalla a la vez. Queremos que esto se sienta claro, guiado y fácil de responder.</p>
+      <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.03 }}>Construyamos tu punto de partida</h1>
+      <p style={{ margin: '12px 0 14px', color: '#dbeafe', lineHeight: 1.6 }}>Queremos entender mejor tu situación para que STOP se sienta más útil desde el inicio.</p>
           <div style={{ height: 10, borderRadius: 999, background: 'rgba(255,255,255,0.14)', overflow: 'hidden' }}>
             <div style={{ width: `${progress}%`, height: '100%', borderRadius: 999, background: 'linear-gradient(90deg, #93c5fd 0%, #34d399 100%)' }} />
           </div>
@@ -438,7 +436,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
             <Sparkles size={16} color="#1d4ed8" />
             Perspectiva general
           </div>
-          <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 14, marginBottom: 10 }}>{insightCards[Math.min(slideIndex % insightCards.length, insightCards.length - 1)]}</div>
+          <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 14, marginBottom: 10 }}>Tus respuestas nos ayudan a darte una experiencia más clara, más cercana y más ajustada a lo que te pasa.</div>
           <div style={{ color: theme.subtle, fontSize: 12, fontWeight: 700 }}>Fuente: OMS, hoja informativa sobre juegos de azar y apuestas, 2 de diciembre de 2024.</div>
         </section>
 
@@ -458,7 +456,7 @@ export default function Onboarding({ initialProfile, onContinue, themeMode, onTo
               <ShieldCheck size={16} />
               Esto no es solo registro
             </div>
-            Tus respuestas van a personalizar el tono de STOP, el cálculo del costo real, el asistente, futuras alertas y los recordatorios más sensibles a tu caso.
+            Tus respuestas nos ayudan a darte una experiencia más clara, más cercana y más ajustada a lo que te pasa.
           </section>
 
           <div style={{ display: 'grid', gridTemplateColumns: slideIndex > 0 ? '0.78fr 1fr' : '1fr', gap: 10 }}>
