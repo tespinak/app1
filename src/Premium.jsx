@@ -23,20 +23,17 @@ const supportLayers = [
   {
     icon: CalendarClock,
     title: 'Alertas antes de momentos difíciles',
-    text: 'Te avisa antes de horarios, partidos o momentos que suelen moverte más.',
-    tone: '#2563eb',
+    text: 'Te avisa antes de horarios, partidos o momentos que suelen costarte más.',
   },
   {
     icon: LockKeyhole,
     title: 'Más herramientas para poner límites',
     text: 'Suma barreras sobre apps, sitios y rutinas cuando te sientes más vulnerable.',
-    tone: '#0f766e',
   },
   {
     icon: TimerReset,
-    title: 'Más claridad sobre lo que te pasa',
+    title: 'Una mejor lectura de tu progreso',
     text: 'Te ayuda a ver cuándo se repite el patrón y qué lo está empujando.',
-    tone: '#2563eb',
   },
 ]
 
@@ -45,7 +42,6 @@ function getDiagnosticTone(level) {
     return {
       badge: 'Esto ya merece atención',
       text: 'Con tu resultado, puede hacerte bien sumar más apoyo en los momentos en que más te cuesta.',
-      surface: 'rgba(239,68,68,0.14)',
     }
   }
 
@@ -53,14 +49,12 @@ function getDiagnosticTone(level) {
     return {
       badge: 'Todavía estás a tiempo',
       text: 'Este es un buen momento para empezar con más apoyo y más claridad.',
-      surface: 'rgba(245,158,11,0.16)',
     }
   }
 
   return {
     badge: 'Apoyo temprano',
     text: 'Todavía puedes actuar a tiempo y ordenar esto antes de que crezca más.',
-    surface: 'rgba(16,185,129,0.16)',
   }
 }
 
@@ -92,24 +86,53 @@ function TabButton({ active, label, onClick, theme }) {
   )
 }
 
-function PlanCard({ title, subtitle, price, badge, highlighted, note, theme }) {
-  const border = highlighted
-    ? `1px solid ${theme.blue}`
-    : `1px solid ${theme.mode === 'dark' ? theme.border : (theme.borderStrong || theme.border)}`
-
+function LayerCard({ icon: Icon, title, text, theme }) {
   return (
-    <div
+    <section
       style={{
-        borderRadius: 32,
+        background: theme.surface,
+        borderRadius: 24,
+        padding: 18,
+        border: `1px solid ${theme.mode === 'dark' ? theme.border : theme.borderStrong || theme.border}`,
+        boxShadow: theme.shadow,
+        transition: theme.transition,
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+        <div
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: 16,
+            background: theme.blueSurface,
+            display: 'grid',
+            placeItems: 'center',
+            flexShrink: 0,
+          }}
+        >
+          <Icon size={20} color={theme.blue} />
+        </div>
+        <div>
+          <div style={{ color: theme.text, fontWeight: 900, fontSize: 19, marginBottom: 6, lineHeight: 1.15 }}>{title}</div>
+          <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 14 }}>{text}</div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function PlanCard({ title, subtitle, price, note, highlighted, badge, theme }) {
+  return (
+    <section
+      style={{
+        borderRadius: 30,
         padding: 22,
-        border,
+        border: highlighted ? `1px solid ${theme.blue}` : `1px solid ${theme.mode === 'dark' ? theme.border : theme.borderStrong || theme.border}`,
         background: highlighted
           ? theme.mode === 'dark'
-            ? 'linear-gradient(145deg, rgba(20,27,45,0.96) 0%, rgba(12,42,102,0.94) 100%)'
-            : 'linear-gradient(145deg, #f7fbff 0%, #eef6ff 100%)'
-          : theme.mode === 'dark'
-            ? 'linear-gradient(145deg, rgba(8,15,30,0.94) 0%, rgba(15,23,42,0.92) 100%)'
-            : '#f8fafc',
+            ? 'linear-gradient(145deg, rgba(8,15,30,0.96) 0%, rgba(22,50,92,0.92) 100%)'
+            : 'linear-gradient(145deg, #ffffff 0%, #eef6ff 100%)'
+          : theme.surface,
         boxShadow: highlighted ? '0 22px 48px rgba(29,78,216,0.18)' : theme.shadow,
         transition: theme.transition,
       }}
@@ -120,14 +143,10 @@ function PlanCard({ title, subtitle, price, badge, highlighted, note, theme }) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
-            borderRadius: 999,
             padding: '8px 12px',
-            background: highlighted
-              ? theme.mode === 'dark'
-                ? 'rgba(16,185,129,0.18)'
-                : '#dcfce7'
-              : theme.pill,
-            color: highlighted ? theme.green : theme.subtle,
+            borderRadius: 999,
+            background: theme.greenSurface,
+            color: theme.greenHover,
             fontSize: 11,
             fontWeight: 900,
             letterSpacing: 0.4,
@@ -140,10 +159,10 @@ function PlanCard({ title, subtitle, price, badge, highlighted, note, theme }) {
       ) : null}
 
       <div style={{ color: theme.text, fontWeight: 900, fontSize: 28, marginBottom: 8 }}>{title}</div>
-      <div style={{ color: theme.muted, lineHeight: 1.65, fontSize: 17, marginBottom: 18 }}>{subtitle}</div>
-      <div style={{ color: theme.text, fontSize: 52, fontWeight: 900, lineHeight: 0.95, letterSpacing: -1.5 }}>{price}</div>
+      <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 16, marginBottom: 18 }}>{subtitle}</div>
+      <div style={{ color: theme.text, fontSize: 52, fontWeight: 900, lineHeight: 0.95, letterSpacing: -1.4 }}>{price}</div>
       <div style={{ color: theme.subtle, fontSize: 15, marginTop: 12, lineHeight: 1.55 }}>{note}</div>
-    </div>
+    </section>
   )
 }
 
@@ -159,29 +178,13 @@ export default function Premium({
 }) {
   const theme = getTheme(themeMode)
   const isPostDiagnostic = context === 'post-diagnostic'
-  const [activeTab, setActiveTab] = useState(isPostDiagnostic ? 'plans' : 'system')
-  const border = `1px solid ${theme.mode === 'dark' ? theme.border : (theme.borderStrong || theme.border)}`
-  const cardSurface = theme.mode === 'dark' ? 'rgba(15,23,42,0.78)' : '#f8fafc'
+  const [activeTab, setActiveTab] = useState(isPostDiagnostic ? 'plans' : 'support')
+  const border = `1px solid ${theme.mode === 'dark' ? theme.border : theme.borderStrong || theme.border}`
   const diagnosticTone = useMemo(() => getDiagnosticTone(profile.diagnosticLevel), [profile.diagnosticLevel])
   const focus = renderText(profile.sportFocus || profile.bettingType || 'apuestas deportivas y juego online')
-  const baseCard = {
-    background: theme.surface,
-    borderRadius: 28,
-    padding: 20,
-    boxShadow: theme.shadow,
-    border,
-    transition: theme.transition,
-  }
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        padding: '28px 20px 112px',
-        background: theme.canvas,
-        transition: theme.transition,
-      }}
-    >
+    <div style={{ minHeight: '100vh', padding: '28px 20px 112px', background: theme.canvas, transition: theme.transition }}>
       <style>{`@keyframes stopFadeUp { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: translateY(0); } }`}</style>
 
       <div style={{ maxWidth: 460, margin: '0 auto' }}>
@@ -225,13 +228,6 @@ export default function Premium({
           <div
             style={{
               position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.05), transparent 38%)',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
               top: -44,
               right: -24,
               width: 170,
@@ -240,29 +236,8 @@ export default function Premium({
               borderRadius: '50%',
             }}
           />
-          <div
-            style={{
-              position: 'absolute',
-              left: -40,
-              bottom: -62,
-              width: 180,
-              height: 180,
-              background: 'radial-gradient(circle, rgba(16,185,129,0.20) 0%, rgba(16,185,129,0.03) 72%)',
-              borderRadius: '50%',
-            }}
-          />
-
           <div style={{ position: 'relative' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 12,
-                marginBottom: 14,
-                flexWrap: 'wrap',
-              }}
-            >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
               <div
                 style={{
                   display: 'inline-flex',
@@ -283,7 +258,7 @@ export default function Premium({
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: 8,
-                    background: diagnosticTone.surface,
+                    background: 'rgba(255,255,255,0.12)',
                     borderRadius: 999,
                     padding: '8px 12px',
                     color: '#fff',
@@ -297,37 +272,20 @@ export default function Premium({
               ) : null}
             </div>
 
-            <h1 style={{ margin: 0, fontSize: 38, lineHeight: 1.02, letterSpacing: -1.2 }}>
+            <h1 style={{ margin: 0, fontSize: 36, lineHeight: 1.02, letterSpacing: -1.2 }}>
               Más apoyo cuando más lo necesitas.
             </h1>
-            <p style={{ margin: '12px 0 18px', color: '#dbeafe', lineHeight: 1.65, fontSize: 16 }}>
-              {`STOP PRO suma una capa más completa de apoyo para ayudarte a frenar antes de que el impulso te gane con ${focus}.`}
+            <p style={{ margin: '12px 0 16px', color: '#dbeafe', lineHeight: 1.65, fontSize: 16 }}>
+              {isPostDiagnostic
+                ? 'Con tu resultado, puede hacerte bien sumar más apoyo. No se trata de hacerlo perfecto. Se trata de no seguir enfrentando esto siempre de la misma manera.'
+                : `STOP PRO está pensado para acompañarte mejor cuando necesitas más ayuda, más claridad y herramientas más concretas para ${focus}.`}
             </p>
-
-            <div
-              style={{
-                background: 'rgba(255,255,255,0.10)',
-                borderRadius: 24,
-                padding: 18,
-                lineHeight: 1.6,
-                marginBottom: 14,
-              }}
-            >
-              <div style={{ fontWeight: 900, marginBottom: 6, fontSize: 17 }}>
-                {isPostDiagnostic ? 'Con tu resultado, puede hacerte bien sumar más apoyo.' : 'Tu versión actual te ayuda a empezar.'}
-              </div>
-              <div style={{ color: '#dbeafe' }}>
-                {isPostDiagnostic
-                  ? diagnosticTone.text
-                  : 'STOP PRO está pensado para acompañarte mejor cuando necesitas más contención, más orden y más ayuda concreta.'}
-              </div>
-            </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10 }}>
               {[
-                ['ALERTAS', 'Más apoyo'],
-                ['LÍMITES', 'Más herramientas'],
-                ['CLARIDAD', 'Paso más claro'],
+                ['ALERTAS', 'Antes del impulso'],
+                ['LÍMITES', 'Cuando más te cuesta'],
+                ['CLARIDAD', 'Sobre tu patrón'],
               ].map(([label, value]) => (
                 <div
                   key={label}
@@ -335,7 +293,6 @@ export default function Premium({
                     background: 'rgba(255,255,255,0.10)',
                     borderRadius: 18,
                     padding: '12px 10px',
-                    backdropFilter: 'blur(10px)',
                   }}
                 >
                   <div style={{ color: '#bfdbfe', fontSize: 10, fontWeight: 900, letterSpacing: 0.5, marginBottom: 6 }}>{label}</div>
@@ -346,20 +303,32 @@ export default function Premium({
           </div>
         </section>
 
-        <section style={{ ...baseCard, marginBottom: 18, padding: 10, background: theme.segmentedSurface, animation: 'stopFadeUp 320ms ease' }}>
+        <section
+          style={{
+            background: theme.segmentedSurface,
+            borderRadius: 28,
+            padding: 10,
+            border,
+            boxShadow: theme.shadow,
+            marginBottom: 18,
+          }}
+        >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-            <TabButton active={activeTab === 'system'} label="Más apoyo" onClick={() => setActiveTab('system')} theme={theme} />
+            <TabButton active={activeTab === 'support'} label="Más apoyo" onClick={() => setActiveTab('support')} theme={theme} />
             <TabButton active={activeTab === 'plans'} label="Planes" onClick={() => setActiveTab('plans')} theme={theme} />
           </div>
         </section>
 
-        {activeTab === 'system' ? (
+        {activeTab === 'support' ? (
           <>
             <section
               style={{
-                ...baseCard,
+                background: theme.mode === 'dark' ? 'rgba(12,18,32,0.88)' : 'linear-gradient(145deg, #ffffff 0%, #f6fbff 100%)',
+                borderRadius: 30,
+                padding: 22,
+                border,
+                boxShadow: theme.shadow,
                 marginBottom: 18,
-                background: theme.mode === 'dark' ? 'rgba(15,23,42,0.88)' : 'linear-gradient(145deg, #ffffff 0%, #f6fbff 100%)',
                 animation: 'stopFadeUp 380ms ease',
               }}
             >
@@ -378,84 +347,67 @@ export default function Premium({
                 }}
               >
                 <ShieldCheck size={14} />
-                Más apoyo cuando más te cuesta
+                Lo que suma STOP PRO
               </div>
               <div style={{ color: theme.text, fontSize: 26, fontWeight: 900, marginBottom: 8 }}>
-                Ayuda más clara y más completa para los momentos difíciles
+                Una capa más completa de apoyo para ayudarte a frenar a tiempo
               </div>
               <div style={{ color: theme.muted, lineHeight: 1.65, fontSize: 15 }}>
-                La idea no es exigirte más. La idea es ayudarte a llegar mejor a esos momentos en que se hace más difícil sostenerte.
+                Tu versión actual puede ayudarte a empezar. STOP PRO te acompaña mejor en esos momentos en que más te cuesta sostenerte.
+              </div>
+            </section>
+
+            <section
+              style={{
+                background: theme.surface,
+                borderRadius: 28,
+                padding: 18,
+                border,
+                boxShadow: theme.shadow,
+                marginBottom: 18,
+                animation: 'stopFadeUp 420ms ease',
+              }}
+            >
+              <div style={{ color: theme.subtle, fontSize: 11, fontWeight: 900, letterSpacing: 0.4, marginBottom: 10 }}>VISTA PREVIA</div>
+              <div style={{ display: 'grid', gap: 10 }}>
+                <div style={{ background: theme.blueSurface, borderRadius: 18, padding: '12px 14px' }}>
+                  <div style={{ color: theme.blue, fontSize: 12, fontWeight: 900, marginBottom: 4 }}>ALERTA SENSIBLE</div>
+                  <div style={{ color: theme.text, fontWeight: 800, marginBottom: 4 }}>Hoy 20:30 suele ser una hora difícil para ti</div>
+                  <div style={{ color: theme.muted, fontSize: 14, lineHeight: 1.5 }}>Activa un plan corto antes de que el impulso suba.</div>
+                </div>
+                <div style={{ background: theme.mode === 'dark' ? 'rgba(255,255,255,0.05)' : '#f8fafc', borderRadius: 18, padding: '12px 14px', border }}>
+                  <div style={{ color: theme.subtle, fontSize: 12, fontWeight: 900, marginBottom: 4 }}>MODO PROTEGIDO</div>
+                  <div style={{ color: theme.text, fontWeight: 800, marginBottom: 4 }}>Bloquea sitios y suma fricción extra</div>
+                  <div style={{ color: theme.muted, fontSize: 14, lineHeight: 1.5 }}>Una capa más concreta cuando sabes que estás vulnerable.</div>
+                </div>
               </div>
             </section>
 
             <div style={{ display: 'grid', gap: 12, marginBottom: 18 }}>
-              {supportLayers.map(({ icon: Icon, title, text, tone }, index) => (
-                <section
-                  key={title}
-                  style={{
-                    ...baseCard,
-                    animation: `stopFadeUp ${420 + index * 40}ms ease`,
-                    padding: 18,
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-                    <div
-                      style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: 16,
-                        background: `${tone}18`,
-                        display: 'grid',
-                        placeItems: 'center',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <Icon size={20} color={tone} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ color: theme.subtle, fontSize: 11, fontWeight: 900, letterSpacing: 0.4, marginBottom: 6 }}>
-                        APOYO 0{index + 1}
-                      </div>
-                      <div style={{ color: theme.text, fontWeight: 900, fontSize: 20, marginBottom: 6, lineHeight: 1.15 }}>{title}</div>
-                      <div style={{ color: theme.muted, lineHeight: 1.6, fontSize: 14 }}>{text}</div>
-                    </div>
-                  </div>
-                </section>
+              {supportLayers.map(({ icon, title, text }, index) => (
+                <div key={title} style={{ animation: `stopFadeUp ${470 + index * 40}ms ease` }}>
+                  <LayerCard icon={icon} title={title} text={text} theme={theme} />
+                </div>
               ))}
             </div>
 
             <section
               style={{
-                ...baseCard,
+                background: theme.mode === 'dark' ? 'linear-gradient(145deg, rgba(12,18,32,0.92) 0%, rgba(22,50,92,0.64) 100%)' : 'linear-gradient(145deg, #ffffff 0%, #eef6ff 100%)',
+                borderRadius: 30,
+                padding: 22,
+                border,
+                boxShadow: theme.shadow,
                 marginBottom: 18,
-                background: theme.mode === 'dark' ? 'linear-gradient(145deg, rgba(15,23,42,0.90) 0%, rgba(15,118,110,0.14) 100%)' : 'linear-gradient(145deg, #ffffff 0%, #ecfeff 100%)',
-                animation: 'stopFadeUp 540ms ease',
+                animation: 'stopFadeUp 620ms ease',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                 <LockKeyhole size={18} color={theme.blue} />
-                <div style={{ color: theme.text, fontWeight: 800, fontSize: 18 }}>Más herramientas para poner límites</div>
+                <div style={{ color: theme.text, fontWeight: 900, fontSize: 20 }}>Protección real</div>
               </div>
               <div style={{ color: theme.muted, lineHeight: 1.65, marginBottom: 14 }}>
                 Navegador, teléfono y tiempo atrapado bajo una misma capa de apoyo más concreta.
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
-                {['Navegador', 'Teléfono', 'Tiempo atrapado'].map((item) => (
-                  <div
-                    key={item}
-                    style={{
-                      borderRadius: 999,
-                      padding: '8px 12px',
-                      background: theme.mode === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.66)',
-                      border,
-                      color: theme.text,
-                      fontWeight: 800,
-                      fontSize: 12,
-                    }}
-                  >
-                    {item}
-                  </div>
-                ))}
               </div>
               <button
                 type="button"
@@ -473,7 +425,6 @@ export default function Premium({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 8,
-                  transition: theme.transition,
                 }}
               >
                 Ver cómo funciona
@@ -483,10 +434,20 @@ export default function Premium({
           </>
         ) : (
           <>
-            <section style={{ ...baseCard, marginBottom: 18, animation: 'stopFadeUp 380ms ease' }}>
+            <section
+              style={{
+                background: theme.surface,
+                borderRadius: 28,
+                padding: 20,
+                border,
+                boxShadow: theme.shadow,
+                marginBottom: 18,
+                animation: 'stopFadeUp 380ms ease',
+              }}
+            >
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                 <Gem size={18} color={theme.blue} />
-                <div style={{ color: theme.text, fontWeight: 800, fontSize: 18 }}>Ver planes</div>
+                <div style={{ color: theme.text, fontWeight: 900, fontSize: 20 }}>Ver planes</div>
               </div>
               <div style={{ color: theme.muted, lineHeight: 1.65 }}>
                 No se trata de hacerlo perfecto. Se trata de darte más apoyo y más claridad cuando más lo necesitas.
@@ -495,17 +456,35 @@ export default function Premium({
 
             <section
               style={{
-                ...baseCard,
+                background: theme.mode === 'dark' ? 'rgba(12,18,32,0.88)' : 'linear-gradient(145deg, #ffffff 0%, #f6fbff 100%)',
+                borderRadius: 30,
+                padding: 22,
+                border,
+                boxShadow: theme.shadow,
                 marginBottom: 18,
-                background: theme.mode === 'dark' ? 'rgba(15,23,42,0.88)' : 'linear-gradient(145deg, #ffffff 0%, #f6fbff 100%)',
                 animation: 'stopFadeUp 440ms ease',
               }}
             >
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderRadius: 999, background: theme.greenSurface, color: theme.greenHover, fontWeight: 900, fontSize: 12, marginBottom: 12 }}>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '8px 12px',
+                  borderRadius: 999,
+                  background: theme.greenSurface,
+                  color: theme.greenHover,
+                  fontWeight: 900,
+                  fontSize: 12,
+                  marginBottom: 12,
+                }}
+              >
                 <Zap size={14} />
-                Ahorra $11.890 al año
+                Ahorra ${yearlySavings.toLocaleString('es-CL')} al año
               </div>
-              <div style={{ color: theme.text, fontSize: 24, fontWeight: 900, marginBottom: 6 }}>El anual te deja STOP PRO por menos de mil pesos al mes</div>
+              <div style={{ color: theme.text, fontSize: 24, fontWeight: 900, marginBottom: 6 }}>
+                El anual te deja STOP PRO por menos de mil pesos al mes
+              </div>
               <div style={{ color: theme.muted, lineHeight: 1.65 }}>
                 Si ya sabes que esto no se arregla en dos semanas, el anual es la forma más simple de sostener más apoyo durante el proceso.
               </div>
@@ -514,56 +493,20 @@ export default function Premium({
             <section style={{ display: 'grid', gap: 12, marginBottom: 18 }}>
               <PlanCard
                 title="STOP PRO anual"
-                subtitle="La opción más conveniente si ya decidiste tomarte esto en serio."
+                subtitle="La opción más conveniente si quieres sostener este proceso con más apoyo."
                 price="$11.990"
-                badge="Mejor valor"
-                highlighted
                 note={`Equivale a ~ $${yearlyMonthlyEquivalent}/mes y ahorras $${yearlySavings.toLocaleString('es-CL')} al año.`}
+                highlighted
+                badge="Mejor valor"
                 theme={theme}
               />
               <PlanCard
                 title="STOP PRO mensual"
-                subtitle="Ideal si quieres empezar ahora y ver cómo se siente este apoyo en tu día a día."
+                subtitle="Una buena forma de probar esta ayuda extra y ver si te sirve."
                 price="$1.990"
                 note="Pago mensual. Más apoyo sin amarrarte de entrada."
                 theme={theme}
               />
-            </section>
-
-            <section
-              style={{
-                ...baseCard,
-                marginBottom: 18,
-                background: theme.mode === 'dark' ? 'linear-gradient(145deg, rgba(15,23,42,0.90) 0%, rgba(29,78,216,0.12) 100%)' : 'linear-gradient(145deg, #ffffff 0%, #eef6ff 100%)',
-                animation: 'stopFadeUp 520ms ease',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <ShieldCheck size={18} color={theme.green} />
-                <div style={{ color: theme.text, fontWeight: 800, fontSize: 18 }}>Qué suma STOP PRO</div>
-              </div>
-              <div style={{ display: 'grid', gap: 10 }}>
-                {[
-                  'Más apoyo en momentos sensibles.',
-                  'Más claridad sobre lo que te pasa.',
-                  'Más herramientas para frenarte a tiempo.',
-                ].map((item) => (
-                  <div
-                    key={item}
-                    style={{
-                      background: cardSurface,
-                      borderRadius: 18,
-                      padding: '14px 16px',
-                      border,
-                      color: theme.text,
-                      fontWeight: 700,
-                      lineHeight: 1.55,
-                    }}
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
             </section>
           </>
         )}
@@ -602,7 +545,6 @@ export default function Premium({
               fontWeight: 800,
               boxShadow: theme.shadow,
               transition: theme.transition,
-              marginBottom: 8,
             }}
           >
             Ver mi plan
@@ -622,7 +564,6 @@ export default function Premium({
               fontWeight: 800,
               boxShadow: theme.shadow,
               transition: theme.transition,
-              marginBottom: 8,
             }}
           >
             Volver a mi plan base

@@ -46,17 +46,17 @@ function buildActions(profile) {
   return [
     {
       icon: HeartPulse,
-      title: 'Usa el modo crisis antes de actuar',
+      title: 'Usa el modo crisis cuando sientas que estás perdiendo el control',
       text: 'Cuando aparezca urgencia, entra al ejercicio guiado y date al menos 3 ciclos antes de decidir cualquier cosa.',
     },
     {
       icon: CalendarClock,
-      title: `Mira mejor cuándo aparece el impulso`,
+      title: 'Presta atención a los momentos en que el impulso aparece con más fuerza',
       text: `Registra check-ins diarios para entender mejor lo que te pasa alrededor de ${focus}.`,
     },
     {
       icon: Target,
-      title: `Recuerda qué quieres recuperar`,
+      title: 'Recuerda qué estás tratando de recuperar',
       text: `No se trata solo de no apostar. Se trata de recuperar ${goal} y llegar con más orden a los momentos en que más te cuesta.`,
     },
   ]
@@ -66,7 +66,7 @@ export default function PersonalizedPlan({ profile, currentScreen = 'home', onNa
   const theme = getTheme(themeMode)
   const tone = getPlanTone(profile)
   const actions = buildActions(profile)
-  const border = `1px solid ${theme.mode === 'dark' ? theme.border : (theme.borderStrong || theme.border)}`
+  const border = `1px solid ${theme.mode === 'dark' ? theme.border : theme.borderStrong || theme.border}`
 
   return (
     <div style={{ minHeight: '100vh', padding: '28px 20px 112px', background: theme.canvas, transition: theme.transition }}>
@@ -118,17 +118,6 @@ export default function PersonalizedPlan({ profile, currentScreen = 'home', onNa
               background: 'radial-gradient(circle, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.03) 70%)',
             }}
           />
-          <div
-            style={{
-              position: 'absolute',
-              left: -40,
-              bottom: -62,
-              width: 180,
-              height: 180,
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(16,185,129,0.20) 0%, rgba(16,185,129,0.03) 72%)',
-            }}
-          />
           <div style={{ position: 'relative' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.12)', borderRadius: 999, padding: '8px 12px', marginBottom: 14, fontWeight: 800 }}>
               <Sparkles size={16} color="#bfdbfe" />
@@ -136,7 +125,7 @@ export default function PersonalizedPlan({ profile, currentScreen = 'home', onNa
             </div>
             <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.02 }}>{tone.title}</h1>
             <p style={{ margin: '12px 0 14px', color: '#dbeafe', lineHeight: 1.65, fontSize: 16 }}>
-              {tone.copy}
+              Este plan toma tu resultado y lo convierte en pasos concretos para que STOP se sienta útil desde hoy.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10 }}>
               {[
@@ -156,13 +145,13 @@ export default function PersonalizedPlan({ profile, currentScreen = 'home', onNa
         <section style={{ background: theme.surface, borderRadius: 28, padding: 22, border, boxShadow: theme.shadow, marginBottom: 18, animation: 'stopFadeUp 320ms ease' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: tone.surface, color: tone.accent, borderRadius: 999, padding: '8px 12px', fontWeight: 900, marginBottom: 14 }}>
             <ShieldCheck size={16} color={tone.accent} />
-            {renderText(profile.diagnosticBand || 'lectura inicial')}
+            Lo importante ahora
           </div>
           <div style={{ color: theme.text, fontSize: 22, fontWeight: 900, lineHeight: 1.15, marginBottom: 10 }}>
-            La idea no es exigirte más.
+            No necesitas resolver todo de una vez.
           </div>
           <div style={{ color: theme.muted, lineHeight: 1.7 }}>
-            La idea es ayudarte a llegar mejor a esos momentos en que se hace más difícil sostenerte.
+            Lo importante es empezar con pasos claros y apoyo real.
           </div>
         </section>
 
@@ -170,8 +159,8 @@ export default function PersonalizedPlan({ profile, currentScreen = 'home', onNa
           {actions.map(({ icon: Icon, title, text }, index) => (
             <section key={title} style={{ background: theme.surface, borderRadius: 24, padding: 18, border, boxShadow: theme.shadow, animation: `stopFadeUp ${380 + index * 40}ms ease` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
-                <div style={{ width: 46, height: 46, borderRadius: 16, background: theme.mode === 'dark' ? 'rgba(37,99,235,0.16)' : '#eff6ff', display: 'grid', placeItems: 'center', marginBottom: 12 }}>
-                  <Icon size={20} color="#2563eb" />
+                <div style={{ width: 46, height: 46, borderRadius: 16, background: theme.blueSurface, display: 'grid', placeItems: 'center', marginBottom: 12 }}>
+                  <Icon size={20} color={theme.blue} />
                 </div>
                 <div style={{ color: theme.subtle, fontSize: 12, fontWeight: 900 }}>0{index + 1}</div>
               </div>
@@ -181,18 +170,18 @@ export default function PersonalizedPlan({ profile, currentScreen = 'home', onNa
           ))}
         </div>
 
-        <section style={{ background: theme.mode === 'dark' ? 'rgba(15,23,42,0.82)' : 'linear-gradient(145deg, #ffffff 0%, #eff6ff 100%)', borderRadius: 26, padding: 20, border, boxShadow: theme.shadow, marginBottom: 18, animation: 'stopFadeUp 520ms ease' }}>
-          <div style={{ color: theme.text, fontWeight: 900, fontSize: 20, marginBottom: 8 }}>Tu versión actual te ayuda a empezar</div>
+        <section style={{ background: theme.mode === 'dark' ? 'rgba(12,18,32,0.82)' : 'linear-gradient(145deg, #ffffff 0%, #eff6ff 100%)', borderRadius: 26, padding: 20, border, boxShadow: theme.shadow, marginBottom: 18, animation: 'stopFadeUp 520ms ease' }}>
+          <div style={{ color: theme.text, fontWeight: 900, fontSize: 20, marginBottom: 8 }}>Si necesitas más apoyo, aquí entra STOP PRO</div>
           <div style={{ color: theme.muted, lineHeight: 1.65, marginBottom: 14 }}>
-            Si necesitas más apoyo, STOP PRO suma herramientas para acompañarte mejor en los momentos más difíciles.
+            STOP PRO suma herramientas para acompañarte mejor en los momentos más difíciles y ayudarte a frenar a tiempo.
           </div>
           <button type="button" onClick={onOpenPremium} style={{ border: 'none', borderRadius: 18, padding: '14px 16px', background: 'linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%)', color: '#fff', fontWeight: 800, width: '100%' }}>
-            Sumar más apoyo
+            Ver cómo funciona STOP PRO
           </button>
         </section>
 
         <button type="button" onClick={() => onNavigate('home')} style={{ width: '100%', border, borderRadius: 24, padding: '15px 18px', background: theme.surface, color: theme.text, fontSize: 15, fontWeight: 800, boxShadow: theme.shadow }}>
-          Ir al inicio
+          Ir a mi inicio
         </button>
       </div>
 

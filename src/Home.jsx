@@ -4,9 +4,10 @@ import {
   BookOpen,
   CalendarDays,
   Clock3,
-  Coins,
   Cog,
+  Coins,
   MessageCircleHeart,
+  ShieldCheck,
   Sparkles,
   SquarePen,
 } from 'lucide-react'
@@ -35,10 +36,19 @@ function getNextMilestone(days) {
   return 14
 }
 
+function getStreakTier(days) {
+  if (days >= 90) return { label: 'Hito 90', text: 'Constancia muy sólida' }
+  if (days >= 60) return { label: 'Hito 60', text: 'Tu hábito ya se nota' }
+  if (days >= 30) return { label: 'Hito 30', text: 'Ya no es casualidad' }
+  if (days >= 14) return { label: 'Hito 14', text: 'Vas tomando ritmo' }
+  if (days >= 7) return { label: 'Hito 7', text: 'Primera semana completa' }
+  return { label: 'Comenzando', text: 'Cada día suma' }
+}
+
 function buildRing(progress, theme) {
   const mainAngle = (progress / 100) * 360
-  const accentAngle = Math.min(360, mainAngle + 14)
-  return `conic-gradient(${theme.green} 0deg ${mainAngle}deg, ${theme.blue} ${mainAngle}deg ${accentAngle}deg, ${theme.ringTrack} ${accentAngle}deg 360deg)`
+  const accentStart = Math.max(0, mainAngle - 18)
+  return `conic-gradient(${theme.blue} 0deg ${accentStart}deg, ${theme.green} ${accentStart}deg ${mainAngle}deg, ${theme.ringTrack} ${mainAngle}deg 360deg)`
 }
 
 function formatCompactCurrency(value) {
@@ -51,33 +61,31 @@ function formatCompactCurrency(value) {
 }
 
 function MetricCard({ icon: Icon, tone, title, value, subtitle, theme }) {
-  const border = `1px solid ${theme.mode === 'dark' ? theme.border : (theme.borderStrong || theme.border)}`
-
   return (
     <div
       style={{
-        background: theme.mode === 'dark' ? 'rgba(15,23,42,0.82)' : '#ffffff',
-        borderRadius: 28,
+        background: theme.mode === 'dark' ? 'rgba(12,18,32,0.82)' : '#ffffff',
+        borderRadius: 26,
         padding: 18,
-        border,
+        border: `1px solid ${theme.mode === 'dark' ? theme.border : theme.borderStrong || theme.border}`,
         boxShadow: theme.shadow,
         transition: theme.transition,
       }}
     >
       <div
         style={{
-          width: 42,
-          height: 42,
+          width: 44,
+          height: 44,
           borderRadius: 16,
           display: 'grid',
           placeItems: 'center',
-          background: `${tone}16`,
+          background: `${tone}18`,
           marginBottom: 12,
         }}
       >
         <Icon size={20} color={tone} />
       </div>
-      <div style={{ color: theme.subtle, fontSize: 11, fontWeight: 900, letterSpacing: 0.5, marginBottom: 8 }}>{title}</div>
+      <div style={{ color: theme.subtle, fontSize: 11, fontWeight: 900, letterSpacing: 0.4, marginBottom: 8 }}>{title}</div>
       <div style={{ color: theme.text, fontSize: 24, fontWeight: 900, lineHeight: 1 }}>{value}</div>
       <div style={{ color: theme.muted, fontSize: 13, lineHeight: 1.5, marginTop: 8 }}>{subtitle}</div>
     </div>
@@ -85,21 +93,19 @@ function MetricCard({ icon: Icon, tone, title, value, subtitle, theme }) {
 }
 
 function QuickAction({ icon: Icon, title, subtitle, onClick, theme, featured = false }) {
-  const border = `1px solid ${theme.mode === 'dark' ? theme.border : (theme.borderStrong || theme.border)}`
-
   return (
     <button
       type="button"
       onClick={onClick}
       style={{
         width: '100%',
-        border,
+        border: `1px solid ${theme.mode === 'dark' ? theme.border : theme.borderStrong || theme.border}`,
         background: featured
           ? theme.mode === 'dark'
-            ? 'linear-gradient(145deg, rgba(15,23,42,0.94) 0%, rgba(30,41,59,0.92) 100%)'
-            : 'linear-gradient(145deg, #ffffff 0%, #f8fbff 100%)'
+            ? 'linear-gradient(145deg, rgba(8,15,30,0.96) 0%, rgba(22,50,92,0.92) 100%)'
+            : 'linear-gradient(145deg, #ffffff 0%, #f7fbff 100%)'
           : theme.mode === 'dark'
-            ? 'rgba(15,23,42,0.82)'
+            ? 'rgba(12,18,32,0.82)'
             : '#ffffff',
         color: theme.text,
         borderRadius: 26,
@@ -108,7 +114,7 @@ function QuickAction({ icon: Icon, title, subtitle, onClick, theme, featured = f
         alignItems: 'center',
         gap: 14,
         textAlign: 'left',
-        boxShadow: featured ? '0 20px 44px rgba(15,23,42,0.10)' : theme.shadow,
+        boxShadow: theme.shadow,
         transition: theme.transition,
       }}
     >
@@ -119,17 +125,11 @@ function QuickAction({ icon: Icon, title, subtitle, onClick, theme, featured = f
           borderRadius: 18,
           display: 'grid',
           placeItems: 'center',
-          background: featured
-            ? theme.mode === 'dark'
-              ? 'rgba(37,99,235,0.18)'
-              : '#eef4ff'
-            : theme.mode === 'dark'
-              ? 'rgba(37,99,235,0.14)'
-              : '#eff6ff',
+          background: featured ? theme.blueSurface : theme.mode === 'dark' ? 'rgba(37,99,235,0.12)' : '#eff6ff',
           flexShrink: 0,
         }}
       >
-        <Icon size={21} color="#2563eb" />
+        <Icon size={21} color={theme.blue} />
       </div>
       <div style={{ flex: 1 }}>
         <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>{title}</div>
@@ -152,7 +152,6 @@ export default function Home({
   onOpenSettings,
 }) {
   const theme = getTheme(themeMode)
-  const cardBorder = `1px solid ${theme.mode === 'dark' ? theme.border : (theme.borderStrong || theme.border)}`
   const [showCrisis, setShowCrisis] = useState(false)
   const checkedInToday = hasCheckedInToday(profile)
   const dateLabel = getCurrentDateLabel()
@@ -162,6 +161,8 @@ export default function Home({
   const savedMoney = profile.streakDays * profile.averageSpend
   const recoveredHours = Math.round(profile.streakDays * profile.hoursLostPerDay)
   const streakRing = useMemo(() => buildRing(milestoneProgress, theme), [milestoneProgress, theme])
+  const border = `1px solid ${theme.mode === 'dark' ? theme.border : theme.borderStrong || theme.border}`
+  const streakTier = getStreakTier(profile.streakDays)
 
   const weeklyLevel = profile.impulseWeek.map((value, index) => {
     const active = index === 4
@@ -191,8 +192,8 @@ export default function Home({
             type="button"
             onClick={onOpenSettings}
             style={{
-              border: cardBorder,
-              background: theme.mode === 'dark' ? 'rgba(15,23,42,0.82)' : '#ffffff',
+              border,
+              background: theme.surface,
               color: theme.text,
               borderRadius: 999,
               padding: '10px 12px',
@@ -209,13 +210,10 @@ export default function Home({
 
         <section
           style={{
-            position: 'relative',
-            overflow: 'hidden',
-            background: theme.hero,
-            color: '#fff',
+            background: theme.mode === 'dark' ? 'rgba(12,18,32,0.82)' : '#ffffff',
             borderRadius: 34,
             padding: '24px 22px 22px',
-            border: cardBorder,
+            border,
             boxShadow: theme.shadow,
             marginBottom: 18,
             transition: theme.transition,
@@ -224,76 +222,22 @@ export default function Home({
         >
           <div
             style={{
-              position: 'absolute',
-              top: -34,
-              right: -12,
-              width: 140,
-              height: 140,
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 70%)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              borderRadius: 999,
+              padding: '8px 12px',
+              background: theme.mode === 'dark' ? 'rgba(37,99,235,0.14)' : '#eef4ff',
+              color: theme.blue,
+              fontWeight: 900,
+              fontSize: 12,
+              marginBottom: 16,
             }}
-          />
-          <div style={{ position: 'relative' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 14, color: '#dbeafe', fontSize: 13, fontWeight: 900 }}>
-              <Sparkles size={14} />
-              STOP
-            </div>
-            <div style={{ fontSize: 34, lineHeight: 1.02, fontWeight: 900, maxWidth: 300, marginBottom: 12 }}>
-              Más apoyo cuando aparecen las ganas de apostar
-            </div>
-            <div style={{ color: '#dbeafe', fontSize: 16, lineHeight: 1.55, marginBottom: 16 }}>
-              STOP está pensado para ayudarte en esos momentos en que se hace más difícil mantener el control.
-            </div>
-            <div style={{ color: '#dbeafe', fontSize: 15, lineHeight: 1.6, marginBottom: 18 }}>
-              No se trata solo de resistir. Se trata de tener ayuda, claridad y herramientas cuando más las necesitas.
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                onClick={onOpenCheckIn}
-                style={{
-                  border: 'none',
-                  borderRadius: 999,
-                  background: '#ffffff',
-                  color: '#1d4ed8',
-                  padding: '12px 18px',
-                  fontWeight: 900,
-                  fontSize: 15,
-                }}
-              >
-                Comenzar
-              </button>
-              <button
-                type="button"
-                onClick={onOpenPremium}
-                style={{
-                  border: '1px solid rgba(255,255,255,0.18)',
-                  borderRadius: 999,
-                  background: 'rgba(255,255,255,0.10)',
-                  color: '#fff',
-                  padding: '12px 18px',
-                  fontWeight: 800,
-                  fontSize: 15,
-                }}
-              >
-                Ver cómo funciona
-              </button>
-            </div>
+          >
+            <ShieldCheck size={14} />
+            {streakTier.label}
           </div>
-        </section>
 
-        <section
-          style={{
-            background: theme.mode === 'dark' ? 'rgba(15,23,42,0.82)' : '#ffffff',
-            borderRadius: 34,
-            padding: '24px 22px 22px',
-            border: cardBorder,
-            boxShadow: theme.shadow,
-            marginBottom: 18,
-            transition: theme.transition,
-            animation: 'stopCardFloat 280ms ease',
-          }}
-        >
           <div
             style={{
               width: 176,
@@ -304,8 +248,8 @@ export default function Home({
               padding: 10,
               boxShadow:
                 theme.mode === 'dark'
-                  ? '0 24px 60px rgba(2,6,23,0.34), 0 0 18px rgba(20,184,166,0.14)'
-                  : '0 18px 50px rgba(37,99,235,0.16), 0 0 18px rgba(20,184,166,0.12)',
+                  ? '0 24px 60px rgba(2,6,23,0.34), 0 0 18px rgba(59,130,246,0.18)'
+                  : '0 18px 50px rgba(37,99,235,0.16), 0 0 18px rgba(16,185,129,0.10)',
             }}
           >
             <div
@@ -316,14 +260,11 @@ export default function Home({
                 display: 'grid',
                 placeItems: 'center',
                 textAlign: 'center',
-                background:
-                  theme.mode === 'dark'
-                    ? 'linear-gradient(180deg, rgba(8,15,30,0.96) 0%, rgba(15,23,42,0.94) 100%)'
-                    : 'linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)',
+                background: theme.mode === 'dark' ? 'linear-gradient(180deg, rgba(8,15,30,0.96) 0%, rgba(15,23,42,0.94) 100%)' : 'linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)',
               }}
             >
               <div>
-                <div style={{ fontSize: 56, fontWeight: 900, lineHeight: 0.95, color: theme.green }}>{profile.streakDays}</div>
+                <div style={{ fontSize: 56, fontWeight: 900, lineHeight: 0.95, color: theme.blue }}>{profile.streakDays}</div>
                 <div style={{ color: theme.subtle, fontSize: 15, fontWeight: 800, marginTop: 8 }}>DÍAS</div>
               </div>
             </div>
@@ -332,7 +273,7 @@ export default function Home({
           <div style={{ textAlign: 'center', marginBottom: 18 }}>
             <div style={{ color: theme.text, fontSize: 18, fontWeight: 900, marginBottom: 6 }}>Vas avanzando</div>
             <div style={{ color: theme.muted, fontSize: 16, lineHeight: 1.5 }}>
-              Cada día cuenta. Este proceso no se construye de golpe, se construye paso a paso.
+              {streakTier.text}. Este proceso se construye paso a paso.
             </div>
           </div>
 
@@ -341,7 +282,8 @@ export default function Home({
               background: theme.mode === 'dark' ? 'rgba(15,23,42,0.68)' : '#f5fbff',
               borderRadius: 24,
               padding: 18,
-              border: cardBorder,
+              border,
+              marginBottom: 14,
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center', marginBottom: 12 }}>
@@ -354,13 +296,93 @@ export default function Home({
                   width: `${milestoneProgress}%`,
                   height: '100%',
                   borderRadius: 999,
-                  background: `linear-gradient(90deg, ${theme.green} 0%, ${theme.blue} 100%)`,
+                  background: `linear-gradient(90deg, ${theme.blue} 0%, ${theme.green} 100%)`,
                 }}
               />
             </div>
             <div style={{ textAlign: 'center', color: theme.subtle, fontSize: 13 }}>
               Solo {daysLeft} días más para alcanzar tu meta
             </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <div
+              style={{
+                background: theme.mode === 'dark' ? 'rgba(15,23,42,0.66)' : '#f8fbff',
+                borderRadius: 20,
+                padding: '14px 16px',
+                border,
+              }}
+            >
+              <div style={{ color: theme.subtle, fontSize: 11, fontWeight: 800, letterSpacing: 0.4, marginBottom: 6 }}>DINERO RECUPERADO</div>
+              <div style={{ color: theme.text, fontSize: 18, fontWeight: 900 }}>{formatCompactCurrency(savedMoney)}</div>
+            </div>
+            <div
+              style={{
+                background: theme.mode === 'dark' ? 'rgba(15,23,42,0.66)' : '#f8fbff',
+                borderRadius: 20,
+                padding: '14px 16px',
+                border,
+              }}
+            >
+              <div style={{ color: theme.subtle, fontSize: 11, fontWeight: 800, letterSpacing: 0.4, marginBottom: 6 }}>TIEMPO RECUPERADO</div>
+              <div style={{ color: theme.text, fontSize: 18, fontWeight: 900 }}>{recoveredHours}h</div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          style={{
+            background: theme.mode === 'dark' ? 'rgba(12,18,32,0.82)' : '#ffffff',
+            borderRadius: 24,
+            padding: 16,
+            border,
+            boxShadow: theme.shadow,
+            marginBottom: 18,
+            transition: theme.transition,
+          }}
+        >
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 8, color: theme.blue, fontSize: 12, fontWeight: 900 }}>
+            <Sparkles size={14} />
+            STOP
+          </div>
+          <div style={{ color: theme.text, fontSize: 18, lineHeight: 1.15, fontWeight: 900, marginBottom: 6 }}>
+            Más apoyo cuando aparecen las ganas de apostar
+          </div>
+          <div style={{ color: theme.muted, fontSize: 13, lineHeight: 1.55, marginBottom: 12 }}>
+            STOP está pensado para ayudarte cuando se hace más difícil mantener el control.
+          </div>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              onClick={onOpenCheckIn}
+              style={{
+                border: 'none',
+                borderRadius: 999,
+                background: theme.segmentedActive,
+                color: '#fff',
+                padding: '11px 16px',
+                fontWeight: 900,
+                fontSize: 14,
+              }}
+            >
+              Comenzar
+            </button>
+            <button
+              type="button"
+              onClick={onOpenPremium}
+              style={{
+                border,
+                borderRadius: 999,
+                background: theme.surface,
+                color: theme.text,
+                padding: '11px 16px',
+                fontWeight: 800,
+                fontSize: 14,
+              }}
+            >
+              Ver cómo funciona
+            </button>
           </div>
         </section>
 
@@ -390,9 +412,9 @@ export default function Home({
         <section style={{ marginBottom: 18 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
             <CalendarDays size={16} color={theme.blue} />
-            <div style={{ color: theme.text, fontSize: 18, fontWeight: 900 }}>Esta semana</div>
+            <div style={{ color: theme.text, fontSize: 18, fontWeight: 900 }}>Tus últimos 7 días</div>
           </div>
-          <div style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
+          <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
             {weeklyLevel.map((item) => (
               <div key={`${item.label}-${item.value}`} style={{ flex: 1, textAlign: 'center' }}>
                 <div
@@ -408,10 +430,10 @@ export default function Home({
                       : item.done
                         ? theme.greenSurface
                         : theme.mode === 'dark'
-                          ? 'rgba(15,23,42,0.72)'
+                          ? 'rgba(12,18,32,0.74)'
                           : '#f8fafc',
                     color: item.active ? '#fff' : item.done ? theme.greenHover : theme.subtle,
-                    border: cardBorder,
+                    border,
                     boxShadow: item.active ? '0 16px 34px rgba(37,99,235,0.18)' : 'none',
                     transition: theme.transition,
                   }}
@@ -429,6 +451,9 @@ export default function Home({
                 </div>
               </div>
             ))}
+          </div>
+          <div style={{ color: theme.subtle, fontSize: 13, lineHeight: 1.5 }}>
+            Verde muestra días más tranquilos. Azul marca el día de hoy.
           </div>
         </section>
 
@@ -485,35 +510,59 @@ export default function Home({
           />
           <div style={{ position: 'relative' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 14, color: '#dbeafe', fontSize: 13, fontWeight: 900 }}>
-              <Sparkles size={14} />
+              <ShieldCheck size={14} />
               STOP PRO
             </div>
-            <div style={{ fontSize: 34, lineHeight: 1.02, fontWeight: 900, maxWidth: 280, marginBottom: 12 }}>
+            <div style={{ fontSize: 30, lineHeight: 1.02, fontWeight: 900, maxWidth: 300, marginBottom: 10 }}>
               Más apoyo para los momentos más difíciles
             </div>
-            <div style={{ color: '#dbeafe', fontSize: 16, lineHeight: 1.55, marginBottom: 18 }}>
+            <div style={{ color: '#dbeafe', fontSize: 15, lineHeight: 1.55, marginBottom: 16 }}>
               STOP PRO suma herramientas para ayudarte a llegar mejor a esos momentos en que el impulso aparece con más fuerza.
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10, marginBottom: 18 }}>
+
+            <div
+              style={{
+                background: 'rgba(255,255,255,0.10)',
+                borderRadius: 22,
+                padding: 14,
+                marginBottom: 16,
+                border: '1px solid rgba(255,255,255,0.10)',
+              }}
+            >
+              <div style={{ color: '#bfdbfe', fontSize: 11, fontWeight: 900, letterSpacing: 0.4, marginBottom: 8 }}>VISTA PREVIA</div>
+              <div style={{ display: 'grid', gap: 8 }}>
+                <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 16, padding: '10px 12px' }}>
+                  <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 2 }}>Alerta sensible</div>
+                  <div style={{ color: '#dbeafe', fontSize: 13 }}>Hoy 20:30 suele ser una hora difícil para ti.</div>
+                </div>
+                <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 16, padding: '10px 12px' }}>
+                  <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 2 }}>Modo protegido</div>
+                  <div style={{ color: '#dbeafe', fontSize: 13 }}>Activa bloqueo de sitios y fricción extra antes del impulso.</div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gap: 10, marginBottom: 16 }}>
               {[
-                ['APOYO', 'Más ayuda'],
-                ['LÍMITES', 'Más herramientas'],
-                ['CLARIDAD', 'Paso más claro'],
-              ].map(([label, value]) => (
+                'Alertas antes de momentos sensibles',
+                'Más herramientas para poner límites',
+                'Una mejor lectura de tu progreso',
+              ].map((item) => (
                 <div
-                  key={label}
+                  key={item}
                   style={{
                     background: 'rgba(255,255,255,0.10)',
                     borderRadius: 18,
-                    padding: '12px 10px',
-                    backdropFilter: 'blur(10px)',
+                    padding: '12px 14px',
+                    fontWeight: 800,
+                    lineHeight: 1.35,
                   }}
                 >
-                  <div style={{ color: '#bfdbfe', fontSize: 10, fontWeight: 900, letterSpacing: 0.5, marginBottom: 6 }}>{label}</div>
-                  <div style={{ color: '#fff', fontSize: 14, fontWeight: 800, lineHeight: 1.2 }}>{value}</div>
+                  {item}
                 </div>
               ))}
             </div>
+
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12 }}>
               <button
                 type="button"

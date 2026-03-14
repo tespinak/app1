@@ -58,6 +58,21 @@ export default function CheckIn({ profile, currentScreen = 'checkin', onNavigate
     return 'Impulso muy fuerte'
   }, [urgeLevel])
 
+  const urgeTone = useMemo(() => {
+    if (urgeLevel <= 2) return '#10b981'
+    if (urgeLevel <= 4) return '#2563eb'
+    if (urgeLevel <= 6) return '#f59e0b'
+    if (urgeLevel <= 8) return '#f97316'
+    return '#ef4444'
+  }, [urgeLevel])
+
+  const urgeSize = useMemo(() => {
+    if (urgeLevel <= 2) return 58
+    if (urgeLevel <= 5) return 64
+    if (urgeLevel <= 8) return 70
+    return 76
+  }, [urgeLevel])
+
   const toggleTrigger = (trigger) => {
     setSelectedTriggers((current) =>
       current.includes(trigger) ? current.filter((item) => item !== trigger) : [...current, trigger],
@@ -283,7 +298,18 @@ export default function CheckIn({ profile, currentScreen = 'checkin', onNavigate
               }}
             >
               <div style={{ textAlign: 'center', marginBottom: 22 }}>
-                <div style={{ color: theme.blue, fontSize: 62, fontWeight: 900, lineHeight: 1 }}>{urgeLevel}</div>
+                <div
+                  style={{
+                    color: urgeTone,
+                    fontSize: urgeSize,
+                    fontWeight: 900,
+                    lineHeight: 1,
+                    transform: `scale(${1 + urgeLevel * 0.012})`,
+                    transition: 'color 180ms ease, transform 180ms ease, font-size 180ms ease',
+                  }}
+                >
+                  {urgeLevel}
+                </div>
                 <div style={{ color: theme.subtle, fontSize: 15, marginTop: 8 }}>{urgeLabel}</div>
               </div>
 

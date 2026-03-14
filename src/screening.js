@@ -6,15 +6,15 @@ export const pgsiOptions = [
 ]
 
 export const pgsiQuestions = [
-  'En los \u00faltimos 12 meses, \u00bfhas apostado m\u00e1s de lo que realmente pod\u00edas permitirte perder?',
-  'En los \u00faltimos 12 meses, \u00bfhas necesitado apostar con m\u00e1s dinero para sentir la misma emoci\u00f3n?',
-  'En los \u00faltimos 12 meses, \u00bfhas vuelto otro d\u00eda para intentar recuperar el dinero perdido?',
-  'En los \u00faltimos 12 meses, \u00bfhas pedido dinero prestado o vendido algo para conseguir dinero para apostar?',
-  'En los \u00faltimos 12 meses, \u00bfhas sentido que podr\u00edas tener un problema con el juego?',
-  'En los \u00faltimos 12 meses, \u00bfapostar te ha causado problemas de salud, incluyendo estr\u00e9s o ansiedad?',
-  'En los \u00faltimos 12 meses, \u00bfpersonas cercanas han criticado tu forma de apostar o te han dicho que es un problema?',
-  'En los \u00faltimos 12 meses, \u00bfapostar te ha causado problemas econ\u00f3micos a ti o a tu hogar?',
-  'En los \u00faltimos 12 meses, \u00bfte has sentido culpable por la forma en que apuestas o por lo que pasa cuando apuestas?',
+  '\u00bfHas apostado m\u00e1s de lo que realmente pod\u00edas permitirte perder?',
+  '\u00bfHas necesitado apostar con m\u00e1s dinero para sentir la misma emoci\u00f3n?',
+  '\u00bfHas vuelto otro d\u00eda para intentar recuperar el dinero perdido?',
+  '\u00bfHas pedido dinero prestado o vendido algo para conseguir dinero para apostar?',
+  '\u00bfHas sentido que podr\u00edas tener un problema con el juego?',
+  '\u00bfApostar te ha causado problemas de salud, incluyendo estr\u00e9s o ansiedad?',
+  '\u00bfPersonas cercanas han criticado tu forma de apostar o te han dicho que es un problema?',
+  '\u00bfApostar te ha causado problemas econ\u00f3micos a ti o a tu hogar?',
+  '\u00bfTe has sentido culpable por la forma en que apuestas o por lo que pasa cuando apuestas?',
 ]
 
 export function getPgsiResult(score) {

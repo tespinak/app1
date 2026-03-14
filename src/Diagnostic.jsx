@@ -69,6 +69,7 @@ export default function Diagnostic({ initialProfile, onContinue, onOpenPremium, 
   const answeredCount = useMemo(() => answers.filter((value) => value !== null).length, [answers])
   const result = getPgsiResult(score)
   const currentQuestion = pgsiQuestions[questionIndex]
+  const currentAnswer = answers[questionIndex]
   const progress = Math.round((answeredCount / pgsiQuestions.length) * 100)
 
   const finalPayload = useMemo(
@@ -357,6 +358,22 @@ export default function Diagnostic({ initialProfile, onContinue, onOpenPremium, 
           <p style={{ margin: '12px 0 18px', color: '#dbeafe', lineHeight: 1.6 }}>
             Este paso nos ayuda a darte un apoyo más claro y un plan más ajustado a lo que necesitas hoy.
           </p>
+          <div
+            style={{
+              marginBottom: 18,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '9px 12px',
+              borderRadius: 999,
+              background: 'rgba(255,255,255,0.10)',
+              color: '#dbeafe',
+              fontSize: 13,
+              fontWeight: 700,
+            }}
+          >
+            Responde pensando en cómo han sido estos últimos 12 meses.
+          </div>
           <div style={{ background: 'rgba(255,255,255,0.10)', borderRadius: 22, padding: 14 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 8 }}>
               <div style={{ color: '#dbeafe', fontSize: 13, fontWeight: 800 }}>Pregunta {questionIndex + 1} de {pgsiQuestions.length}</div>
@@ -400,7 +417,7 @@ export default function Diagnostic({ initialProfile, onContinue, onOpenPremium, 
             PREGUNTA {questionIndex + 1}
           </div>
           <div style={{ color: theme.text, fontSize: 28, fontWeight: 900, lineHeight: 1.12, marginBottom: 10 }}>
-            {renderText(currentQuestion.question)}
+            {renderText(currentQuestion)}
           </div>
           <div style={{ color: theme.muted, lineHeight: 1.65, marginBottom: 16 }}>
             No reemplaza ayuda profesional, pero sí nos da una base más firme para orientarte mejor.
